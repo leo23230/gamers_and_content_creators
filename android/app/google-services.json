@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1070102388111",
+    "firebase_url": "https://gamers-and-content-creators.firebaseio.com",
+    "project_id": "gamers-and-content-creators",
+    "storage_bucket": "gamers-and-content-creators.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070102388111:android:ded6f64933294ed2c63ffa",
+        "android_client_info": {
+          "package_name": "com.nle.gamers_and_content_creators"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1070102388111-1g5rkeds4muucer172kccpq08ba22ko6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7zqgICp_t-GYndcOvvnOKevzhCm7aQGk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070102388111-1g5rkeds4muucer172kccpq08ba22ko6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

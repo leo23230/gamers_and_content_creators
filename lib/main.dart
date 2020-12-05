@@ -29,7 +29,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
+
   Widget build(BuildContext context) {
+    handleStartupLogic();
     return StreamProvider<UserModel>.value(
       value: AuthService().user,
       child: MaterialApp(

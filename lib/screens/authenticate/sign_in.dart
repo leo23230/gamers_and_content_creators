@@ -16,7 +16,7 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.red[100],
+      backgroundColor: Colors.grey[900],
       appBar: AppBar(
         backgroundColor: Colors.red[400],
         elevation: 0.0,
@@ -24,7 +24,10 @@ class _SignInState extends State<SignIn> {
       ),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+        alignment: Alignment.center,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             RaisedButton(
               child: Text('sign in anon'),

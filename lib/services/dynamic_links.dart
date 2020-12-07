@@ -1,4 +1,5 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:http/http.dart';
 
 class DynamicLinkService{
   Future handleDynamicLinks() async{
@@ -19,10 +20,11 @@ class DynamicLinkService{
     );
   }
 
-  void _handleDeepLink (PendingDynamicLinkData data){
+  void _handleDeepLink (PendingDynamicLinkData data) async {
     final Uri deepLink = data?.link;
+    final Map<String, String> query = deepLink.queryParameters;
     if(deepLink != null){
-      print('_handleDeepLink | deepLink: $deepLink');
+      print('_handleDeepLink | deepLink: $query');
     }
   }
 }

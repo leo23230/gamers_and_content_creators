@@ -6,7 +6,8 @@ import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:gamers_and_content_creators/services/dynamic_links.dart';
-
+import 'package:gamers_and_content_creators/screens/home/home.dart';
+import 'package:gamers_and_content_creators/screens/home/subscreens/profile_settings.dart';
 // Add async/await and 2 lines of code to the main function
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,8 +36,14 @@ class _MyAppState extends State<MyApp> {
     return StreamProvider<UserModel>.value(
       value: AuthService().user,
       child: MaterialApp(
-        home: Wrapper(),
+        routes: {
+          '/':(context) => Wrapper(),
+          '/home': (context) => Home(),
+          '/profile-settings': (context) => ProfileSettings(),
+        },
+        initialRoute: '/',
       ),
+      //home: Wrapper(),
     );
   }
 }

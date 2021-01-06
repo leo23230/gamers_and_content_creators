@@ -1,6 +1,9 @@
 import 'package:gamers_and_content_creators/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gamers_and_content_creators/screens/home/profile_widget.dart';
+import 'package:gamers_and_content_creators/screens/home/profile.dart';
+import 'package:gamers_and_content_creators/screens/home/swipe.dart';
+import 'package:gamers_and_content_creators/screens/home/matches.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
 
@@ -8,59 +11,106 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home> {
   final AuthService _auth = AuthService();
-  int _currentIndex = 0;
-  final List <Widget> tabs = [
-    Text('Profile'),
-    Text('Home'),
-    Text('Matches')
+  int _currentIndex = 1;
+  final List <String> tabs = [
+    'Profile',
+    'Home',
+    'Matches',
+  ];
+  final List <Widget> screens = [
+    Profile(),
+    Swipe(),
+    Matches(),
   ];
 
+  final _controller = PageController(
+    initialPage: 1,
+  );
+  void profileSettings() {
+    Navigator.popAndPushNamed(context, '/profile-settings');
+  }
+
+  @override
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        backgroundColor: Colors.grey[700],
-        appBar: AppBar(
-          title: tabs[_currentIndex],
-          backgroundColor: Colors.pink[500],
-          elevation: 0.0,
-          actions: <Widget>[
-            FlatButton.icon(
-              icon: Icon(Icons.person),
-              label: Text('logout'),
-              onPressed: () async {
-                await _auth.signOut();
-              },
-            ),
-          ],
+    super.build(context);
+    return Scaffold(
+      backgroundColor: Colors.grey[850],
+      appBar: AppBar(
+        title: Text(
+          tabs[_currentIndex],
+          style: GoogleFonts.lato(
+          fontSize: 24,
+          color: Colors.white,
+          )
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          selectedItemColor: Colors.deepOrange[400],
-          unselectedItemColor: Colors.grey[600],
-          backgroundColor: Colors.grey[800],
-          onTap: (index) {
-            setState((){
-              _currentIndex = index;
-            });
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              title: Text('Profile'),
+        backgroundColor: Colors.pink[500],
+        elevation: 0.0,
+        actions: <Widget>[
+          FlatButton.icon(
+            icon: Icon(Icons.person, size: 24),
+            label: Text(
+              'logout',
+              style: GoogleFonts.lato(
+                fontSize: 18,
+                color: Colors.grey[900],
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              title: Text('Home'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.forum),
-              title: Text('Matches'),
-            ),
-          ],
+            onPressed: () async {
+              await _auth.signOut();
+            },
+          ),
+        ],
+      ),
+      body: PageView(
+        controller: _controller,
+        children:[
+          Profile(),
+          Swipe(),
+          Matches()
+        ],
+        onPageChanged: (index){
+          setState((){
+            _currentIndex = index;
+          });
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        selectedItemColor: Colors.deepOrange[400],
+        unselectedItemColor: Colors.grey[600],
+        backgroundColor: Colors.grey[900],
+        selectedFontSize: 15,
+        unselectedFontSize: 12,
+        selectedIconTheme: IconThemeData(
+          size: 28,
         ),
+        unselectedIconTheme: IconThemeData(
+          size: 20,
+        ),
+        onTap: (index) {
+          setState((){
+            _currentIndex = index;
+            _controller.animateToPage(_currentIndex, duration: Duration(milliseconds: 200), curve: Curves.linear);
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            title: Text('Profile'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.forum),
+            title: Text('Matches'),
+          ),
+        ],
       ),
     );
   }

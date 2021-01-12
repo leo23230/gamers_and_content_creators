@@ -21,17 +21,17 @@ class _MatchesState extends State<Matches> with AutomaticKeepAliveClientMixin<Ma
         children:[
           CarouselSlider(
             options: CarouselOptions(
-              height:300,
+              height:400,
               initialPage:0,
               enlargeCenterPage: true,
               enlargeStrategy: CenterPageEnlargeStrategy.scale,
               enableInfiniteScroll: false,
-              viewportFraction: 0.5,
+              viewportFraction: 0.6,
             ),
             items:<Widget>[
               Container(
-                width:210,
-                height: 280,
+                width:300,
+                height: 400,
                 decoration: BoxDecoration(
                   color: Colors.grey[800],
                   border: Border.all(color: Colors.white),
@@ -43,9 +43,17 @@ class _MatchesState extends State<Matches> with AutomaticKeepAliveClientMixin<Ma
                     children: [
                       SizedBox(height: 125, width: 125, child: Image.asset('assets/Noah.png')),
                       SizedBox(height: 20),
-                      Text('Noah', style: GoogleFonts.lato(fontSize: 22, color: Colors.white)),
-                      Text('Age: 24', style: GoogleFonts.lato(fontSize: 20, color: Colors.white)),
-                      Text('Discord: Noah357', style: GoogleFonts.lato(fontSize: 20, color: Colors.white)),
+                      Text('Noah', style: GoogleFonts.lato(fontSize: 24, color: Colors.white)),
+                      SizedBox(height:20.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Age: 24', style: GoogleFonts.lato(fontSize: 20, color: Colors.grey[500]), textAlign: TextAlign.left),
+                          Text('Discord: Noah357', style: GoogleFonts.lato(fontSize: 20, color: Colors.grey[500])),
+                        ],
+                      ),
+                      SizedBox(height:20.0),
+                      Text('Gamer', style: GoogleFonts.lato(fontSize: 22, color: Colors.red)),
                       //SizedBox(height: 10),
                       //Text('Discord: noah2118', style: TextStyle(fontSize: 16, color: Colors.white)),
                     ],
@@ -53,8 +61,8 @@ class _MatchesState extends State<Matches> with AutomaticKeepAliveClientMixin<Ma
                 ),
               ),
               Container(
-                width:210,
-                height: 280,
+                width:240,
+                height: 320,
                 decoration: BoxDecoration(
                   color: Colors.grey[800],
                   border: Border.all(color: Colors.white),
@@ -66,16 +74,24 @@ class _MatchesState extends State<Matches> with AutomaticKeepAliveClientMixin<Ma
                     children: [
                       SizedBox(height: 125, width: 125, child: Image.asset('assets/MooShu.png')),
                       SizedBox(height: 20),
-                      Text('MooShu', style: GoogleFonts.lato(fontSize: 22, color: Colors.white)),
-                      Text('Age: 64', style: GoogleFonts.lato(fontSize: 20, color: Colors.white)),
-                      Text('Discord: shoeman1', style: GoogleFonts.lato(fontSize: 20, color: Colors.white)),
+                      Text('MooShu', style: GoogleFonts.lato(fontSize: 24, color: Colors.white)),
+                      SizedBox(height:20.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Age: 64', style: GoogleFonts.lato(fontSize: 20, color: Colors.grey[500])),
+                          Text('Discord: shoeman1', style: GoogleFonts.lato(fontSize: 20, color: Colors.grey[500])),
+                        ],
+                      ),
+                      SizedBox(height:20.0),
+                      Text('Vlogger', style: GoogleFonts.lato(fontSize: 22, color: Colors.red)),
                     ],
                   ),
                 ),
               ),
               Container(
-                width:210,
-                height: 280,
+                width:240,
+                height: 320,
                 decoration: BoxDecoration(
                   color: Colors.grey[800],
                   border: Border.all(color: Colors.white),
@@ -87,9 +103,17 @@ class _MatchesState extends State<Matches> with AutomaticKeepAliveClientMixin<Ma
                     children: [
                       SizedBox(height: 125, width: 125, child: Image.asset('assets/Chives.png')),
                       SizedBox(height: 20),
-                      Text('Chives', style: GoogleFonts.lato(fontSize: 22, color: Colors.white)),
-                      Text('Age: 31', style: GoogleFonts.lato(fontSize: 20, color: Colors.white)),
-                      Text('Discord: sp1c3', style: GoogleFonts.lato(fontSize: 20, color: Colors.white)),
+                      Text('Chives', style: GoogleFonts.lato(fontSize: 24, color: Colors.white)),
+                      SizedBox(height:20.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Age: 31', style: GoogleFonts.lato(fontSize: 20, color: Colors.grey[500])),
+                          Text('Discord: sp1c3', style: GoogleFonts.lato(fontSize: 20, color: Colors.grey[500])),
+                        ],
+                      ),
+                      SizedBox(height:20.0),
+                      Text('Content Creator', style: GoogleFonts.lato(fontSize: 22, color: Colors.red)),
                     ],
                   ),
                 ),

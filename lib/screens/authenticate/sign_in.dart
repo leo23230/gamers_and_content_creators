@@ -46,13 +46,13 @@ class _SignInState extends State<SignIn> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'App Name',
+              'Binxy',
               style: GoogleFonts.pacifico(
-                fontSize: 64.0,
+                fontSize: 96.0,
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 30),
             SizedBox(
               width: 200.0,
               height: 50.0,

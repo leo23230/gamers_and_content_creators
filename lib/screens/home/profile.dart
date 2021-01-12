@@ -46,7 +46,7 @@ class _ProfileState extends State<Profile> {
                     color: Colors.white,
                   ),
                 ),
-                onTap: (){ProfileSettings();},//Navigator.pushNamed(context, '/profile-settings');
+                onTap: (){Navigator.pushNamed(context, '/profile-settings');},//Navigator.pushNamed(context, '/profile-settings');
               ),
             ),
           ),

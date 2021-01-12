@@ -28,9 +28,6 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home> {
   final _controller = PageController(
     initialPage: 1,
   );
-  void profileSettings() {
-    Navigator.popAndPushNamed(context, '/profile-settings');
-  }
 
   @override
   bool get wantKeepAlive => true;

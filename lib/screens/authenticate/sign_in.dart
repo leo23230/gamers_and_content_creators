@@ -5,6 +5,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SignIn extends StatefulWidget {
+
+  final Function toggleView;
+  SignIn({this.toggleView});
+
   @override
   _SignInState createState() => _SignInState();
 }
@@ -51,6 +55,13 @@ class _SignInState extends State<SignIn> {
                 fontSize: 96.0,
                 color: Colors.white,
               ),
+            ),
+            Text(
+              'Content creators connect',
+              style: GoogleFonts.pacifico(
+                fontSize: 24.0,
+                color: Colors.white,
+              )
             ),
             SizedBox(height: 30),
             SizedBox(
@@ -113,6 +124,29 @@ class _SignInState extends State<SignIn> {
                   else{
                     throw 'Could not launch $url';
                   }
+                },
+              ),
+            ),
+            SizedBox(height: 30),
+            SizedBox(
+              width: 200.0,
+              height: 50.0,
+              child: FlatButton(
+                color: Colors.deepOrangeAccent[400],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24.0),
+                  side: BorderSide(color: Colors.white, width: 2),
+                ),
+                hoverColor: Colors.white,
+                child: Text(
+                  'Sign Up',
+                  style: GoogleFonts.lato(
+                    fontSize: 22,
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () {
+                  widget.toggleView();
                 },
               ),
             ),

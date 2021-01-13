@@ -16,8 +16,9 @@ class _MatchesState extends State<Matches> with AutomaticKeepAliveClientMixin<Ma
   Widget build(BuildContext context) {
     super.build(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0,20,0,0),
+      padding: const EdgeInsets.fromLTRB(0,0,0,0),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children:[
           CarouselSlider(
             options: CarouselOptions(

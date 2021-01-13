@@ -7,8 +7,8 @@ class Swipe extends StatefulWidget {
 }
 
 class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe> {
-  final double cardHeight = 560;
-  final double cardWidth = 420;
+  final double cardHeight = 480;
+  final double cardWidth = 360;
   final _controller = PageController(
     initialPage: 0,
   );

@@ -44,17 +44,17 @@ class _MatchesState extends State<Matches> with AutomaticKeepAliveClientMixin<Ma
                     children: [
                       SizedBox(height: 125, width: 125, child: Image.asset('assets/Noah.png')),
                       SizedBox(height: 20),
-                      Text('Noah', style: GoogleFonts.lato(fontSize: 24, color: Colors.white)),
+                      Text('Noah', style: GoogleFonts.lexendDeca(fontSize: 24, color: Colors.white)),
                       SizedBox(height:20.0),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Age: 24', style: GoogleFonts.lato(fontSize: 20, color: Colors.grey[500]), textAlign: TextAlign.left),
-                          Text('Discord: Noah357', style: GoogleFonts.lato(fontSize: 20, color: Colors.grey[500])),
+                          Text('Age: 24', style: GoogleFonts.lexendDeca(fontSize: 20, color: Colors.grey[500]), textAlign: TextAlign.left),
+                          Text('Discord: Noah357', style: GoogleFonts.lexendDeca(fontSize: 20, color: Colors.grey[500])),
                         ],
                       ),
                       SizedBox(height:20.0),
-                      Text('Gamer', style: GoogleFonts.lato(fontSize: 22, color: Colors.red)),
+                      Text('Gamer', style: GoogleFonts.lexendDeca(fontSize: 22, color: Colors.red)),
                       //SizedBox(height: 10),
                       //Text('Discord: noah2118', style: TextStyle(fontSize: 16, color: Colors.white)),
                     ],

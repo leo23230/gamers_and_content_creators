@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'subscreens/settings.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gamers_and_content_creators/models/profile.dart';
+import 'package:provider/provider.dart';
+import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:gamers_and_content_creators/screens/home/home.dart';
 import 'package:gamers_and_content_creators/screens/home/subscreens/profile_settings.dart';
 

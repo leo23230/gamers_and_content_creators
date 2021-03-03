@@ -11,10 +11,9 @@ class AuthService {
     return user != null ? UserModel(uid: user.uid) : null;
   }
 
-  // auth change user stream
+  // maps firebase user object to a user model object after receiving state change
   Stream<UserModel> get user {
     return _auth.authStateChanges().map(_userFromFirebaseUser);
-    //.map((FirebaseUser user) => _userFromFirebaseUser(user));
   }
 
   // sign in anon
@@ -42,13 +41,13 @@ class AuthService {
   }
 
   // register with email and password
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(String email, String password, String name, String age, String location, int month, int day, int year) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User user = result.user;
 
       //create a new document for the user with their unique uid
-      await DatabaseService(uid: user.uid).updateUserData('name','age','location');
+      await DatabaseService(uid: user.uid).updateUserData(name,age,location,month,day,year,'','');
 
       return _userFromFirebaseUser(user);
     } catch (error) {

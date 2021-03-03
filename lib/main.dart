@@ -1,6 +1,8 @@
 import 'package:gamers_and_content_creators/screens/wrapper.dart';
 import 'package:gamers_and_content_creators/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gamers_and_content_creators/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,13 +30,25 @@ class _MyAppState extends State<MyApp> {
   Future handleStartupLogic() async{
     await _dynamicLinkService.handleDynamicLinks();
   }
-
   @override
+
+  //locks device orientation
+  void initState(){
+    super.initState();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  }
 
   Widget build(BuildContext context) {
     handleStartupLogic();
-    return StreamProvider<UserModel>.value(
-      value: AuthService().user,
+    return MultiProvider(
+      providers: [
+        StreamProvider<UserModel>.value(
+          value: AuthService().user,
+        ),
+        /*StreamProvider<UserData>.value(
+          value: DatabaseService().userData,
+        )*/
+      ],
       child: MaterialApp(
         routes: {
           '/':(context) => Wrapper(),

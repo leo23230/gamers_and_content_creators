@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gamers_and_content_creators/screens/home/subscreens/settings.dart';
 import 'package:gamers_and_content_creators/screens/home/subscreens/user_data_form.dart';
+import 'package:gamers_and_content_creators/services/upload.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:gamers_and_content_creators/services/database.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'dart:async';
+import 'dart:io';
 
 class ProfileSettings extends StatefulWidget {
   @override
@@ -13,11 +18,52 @@ class ProfileSettings extends StatefulWidget {
 
 class _ProfileSettingsState extends State<ProfileSettings> {
 
+  //card variables
   final double cardHeight = 480;
   final double cardWidth = 360;
+
+  //page controller
   final _controller = PageController(
     initialPage: 0,
   );
+
+  //image variables
+  File _selectedImage;
+
+  //image get function
+  getImage(ImageSource source) async{
+    File image = await ImagePicker.pickImage(source: source);
+    if(image != null){
+      File croppedImage = await ImageCropper.cropImage(
+          sourcePath: image.path,
+          aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+          maxWidth: 700,
+          maxHeight: 700,
+          compressFormat: ImageCompressFormat.jpg,
+          androidUiSettings: AndroidUiSettings(
+            toolbarColor: Colors.pink[500],
+            toolbarTitle: "Crop Image",
+            statusBarColor: Colors.pink[500],
+            backgroundColor: Colors.grey[900],
+          )
+      );
+      this.setState((){_selectedImage = croppedImage;});
+    }
+  }
+
+  Widget getImageWidget(){
+    if(_selectedImage != null){
+      return CircleAvatar(
+        backgroundImage: FileImage(_selectedImage),
+      );
+    }
+    else{
+      return Image.asset(
+        "assets/Dante.png",
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +82,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: user.uid).userData,//listening to a stream from DBService
-      builder: (context, snapshot) { //data down the stream is reffered to as a snapshot
+      builder: (context, snapshot) { //data down the stream is referred to as a snapshot
         // if(snapshot.hasData){
         //
         // }
@@ -72,10 +118,32 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   floating: false,
                   toolbarHeight: 0,
                   flexibleSpace: FlexibleSpaceBar(
-                    background: Image.asset('assets/Dante.png'),
+                    background: getImageWidget(),
                     title: ButtonBar(
                       alignment: MainAxisAlignment.spaceBetween,
                       children:[
+                        SizedBox(
+                          width:50,
+                          height:50,
+                          child: FloatingActionButton(
+                            heroTag: "cameraButton",
+                            onPressed: () {getImage(ImageSource.camera);},
+                            child: Icon(Icons.camera),
+                            backgroundColor: Colors.pink[500],
+                          ),
+                        ),
+                        Uploader(file: _selectedImage),
+                        //SizedBox(width:50),
+                        SizedBox(
+                          width:50,
+                          height:50,
+                          child: FloatingActionButton(
+                            heroTag: "galleryButton",
+                            onPressed: (){getImage(ImageSource.gallery);},
+                            child: Icon(Icons.image),
+                            backgroundColor: Colors.pink[500],
+                          ),
+                        ),
                       ],
                     ),
                     titlePadding: EdgeInsets.all(20),
@@ -115,7 +183,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   ),
                                   //SizedBox(width: 190),
                                   Text(
-                                    'Age:' + userData.age,
+                                    'Age: ' + userData.age,
                                     style: GoogleFonts.lato(
                                       fontSize: 24,
                                       color: Colors.white,

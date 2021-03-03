@@ -10,6 +10,13 @@ class UserData {
   final String name;
   final String age;
   final String location;
+  final int month;
+  final int day;
+  final int year;
+  final String profileImagePath;
+  final String backgroundImagePath;
 
-  UserData({this.uid, this.name, this.age, this.location});
+  UserData({this.uid, this.name, this.age, this.location, this.month, this.day, this.year,
+  this.profileImagePath, this.backgroundImagePath});
+
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gamers_and_content_creators/screens/home/cards/youtube_card.dart';
 import 'package:gamers_and_content_creators/screens/home/subscreens/settings.dart';
 import 'package:gamers_and_content_creators/screens/home/subscreens/user_data_form.dart';
 import 'package:gamers_and_content_creators/services/upload.dart';
+import 'package:gamers_and_content_creators/shared/card_enum.dart';
+import 'package:gamers_and_content_creators/shared/loading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:gamers_and_content_creators/models/user.dart';
@@ -53,8 +56,17 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
   Widget getImageWidget(){
     if(_selectedImage != null){
-      return CircleAvatar(
-        backgroundImage: FileImage(_selectedImage),
+      return Container(
+        width: 200,
+        height: 200,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: FileImage(_selectedImage),
+            fit: BoxFit.cover,
+          ),
+          border: Border.all(width: 4, color: Colors.white),
+          borderRadius: BorderRadius.all(Radius.circular(100)),
+        ),
       );
     }
     else{
@@ -83,21 +95,24 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: user.uid).userData,//listening to a stream from DBService
       builder: (context, snapshot) { //data down the stream is referred to as a snapshot
-        // if(snapshot.hasData){
-        //
-        // }
-        // else{
-        //
-        // }
         UserData userData = snapshot.data;
+
+        if(snapshot.hasData){
+
+        }
+        else{
+          if(snapshot.hasError) print(snapshot.error);
+        }
+
         return Scaffold(
+          backgroundColor: Colors.black,
           appBar: AppBar(
             backgroundColor: Colors.pink[500],
             actions: <Widget>[
-              FlatButton.icon(
+              FlatButton.icon( //Edit
                 icon: Icon(Icons.edit, size: 24),
                 label: Text(
-                  'edit',
+                  'edit info',
                   style: GoogleFonts.lato(
                     fontSize: 18,
                     color: Colors.grey[900],
@@ -105,163 +120,187 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 ),
                 onPressed: (() => _showUserDataForm()),
               ),
-            ],
-          ),
-          body:Container(
-            color: Colors.grey[850],
-            child: CustomScrollView(
-              slivers: <Widget> [
-                SliverAppBar(
-                  expandedHeight: 340.0,
-                  backgroundColor: Color.fromRGBO(0, 0, 0, 0),
-                  pinned: false,
-                  floating: false,
-                  toolbarHeight: 0,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: getImageWidget(),
-                    title: ButtonBar(
-                      alignment: MainAxisAlignment.spaceBetween,
-                      children:[
-                        SizedBox(
-                          width:50,
-                          height:50,
-                          child: FloatingActionButton(
-                            heroTag: "cameraButton",
-                            onPressed: () {getImage(ImageSource.camera);},
-                            child: Icon(Icons.camera),
-                            backgroundColor: Colors.pink[500],
-                          ),
-                        ),
-                        Uploader(file: _selectedImage),
-                        //SizedBox(width:50),
-                        SizedBox(
-                          width:50,
-                          height:50,
-                          child: FloatingActionButton(
-                            heroTag: "galleryButton",
-                            onPressed: (){getImage(ImageSource.gallery);},
-                            child: Icon(Icons.image),
-                            backgroundColor: Colors.pink[500],
-                          ),
-                        ),
-                      ],
-                    ),
-                    titlePadding: EdgeInsets.all(20),
+              FlatButton.icon( //card
+                icon: Icon(Icons.ad_units, size: 24),
+                label: Text(
+                  'manage cards',
+                  style: GoogleFonts.lato(
+                    fontSize: 18,
+                    color: Colors.grey[900],
                   ),
                 ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate((BuildContext context, int index){
-                    return Container(
-                      child: Column(
-                        children:<Widget> [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey[900],//Color.fromRGBO(100,0,150,1),
-                              boxShadow: [
-                                BoxShadow(
-                                  color:Colors.black,
-                                  blurRadius: 10,
-                                  offset: Offset(
-                                    0,
-                                    -5,
+                onPressed: (){Navigator.pushNamed(context, '/card-manager');},
+              ),
+            ],
+          ),
+          body:(snapshot.hasData) ? CustomScrollView(
+            slivers: <Widget> [
+              SliverAppBar(
+                expandedHeight: 260.0,
+                backgroundColor: Colors.black,
+                pinned: false,
+                floating: false,
+                toolbarHeight: 0,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if(userData.profileImagePath == '')getImageWidget()
+                      else Container(
+                        width: 200,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(userData.profileImagePath),
+                            fit: BoxFit.cover,
+                          ),
+                          border: Border.all(width: 4, color: Colors.white),
+                          borderRadius: BorderRadius.all(Radius.circular(100)),
+                        ),
+                      ),
+                    ],
+                  ),
+                  titlePadding: EdgeInsets.all(20),
+                  stretchModes: [StretchMode.blurBackground],
+                  title: ButtonBar(
+                        alignment: MainAxisAlignment.spaceBetween,
+                        children:[
+                          SizedBox(
+                            width:50,
+                            height:50,
+                            child: FloatingActionButton(
+                              heroTag: "cameraButton",
+                              onPressed: () {getImage(ImageSource.camera);},
+                              child: Icon(Icons.camera),
+                              backgroundColor: Colors.pink[500],
+                            ),
+                          ),
+                          Uploader(file: _selectedImage),
+                          //SizedBox(width:50),
+                          SizedBox(
+                            width:50,
+                            height:50,
+                            child: FloatingActionButton(
+                              heroTag: "galleryButton",
+                              onPressed: (){getImage(ImageSource.gallery);},
+                              child: Icon(Icons.image),
+                              backgroundColor: Colors.pink[500],
+                            ),
+                          ),
+                        ],
+                      ),
+                  ),
+                ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate((BuildContext context, int index){
+                  return Container(
+                    child: Column(
+                      children:<Widget> [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[900],//Color.fromRGBO(100,0,150,1),
+                            boxShadow: [
+                              BoxShadow(
+                                color:Colors.black,
+                                blurRadius: 10,
+                                offset: Offset(
+                                  0,
+                                  -5,
+                                ),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                //SizedBox(width: 30),
+                                Text(
+                                  userData.name,
+                                  style: GoogleFonts.lato(
+                                    fontSize: 24,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                // IconButton(
+                                //   icon: Icon(
+                                //     Icons.ad_units,
+                                //     color: Colors.white,
+                                //   ),
+                                //   onPressed: (){Navigator.pushNamed(context, '/card-manager');},
+                                // ),
+                                //SizedBox(width: 190),
+                                Text(
+                                  'Age: ' + userData.age,
+                                  style: GoogleFonts.lato(
+                                    fontSize: 24,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ],
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  //SizedBox(width: 30),
-                                  Text(
-                                    userData.name,
-                                    style: GoogleFonts.lato(
-                                      fontSize: 24,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  //SizedBox(width: 190),
-                                  Text(
-                                    'Age: ' + userData.age,
-                                    style: GoogleFonts.lato(
-                                      fontSize: 24,
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                          ),
+                        ),
+                        Container(
+                          height: 550,
+                          color: Colors.black,
+                          child: Center(
+                            child: SizedBox(
+                              height: cardHeight,
+                              width: cardWidth,
+                              child: PageView(
+                                controller: _controller,
+                                scrollDirection: Axis.horizontal,
+                                children:[
+                                  for(int i = 0; i < userData.cards.length; i++)
+                                    if(userData.cards[i] == 'Youtube Card') enumToWidget(userData.cards[i], userData.ytChannelId)
+                                    else enumToWidget(userData.cards[i]),
+                                  // Container(
+                                  //   height: cardHeight,
+                                  //   width: cardWidth,
+                                  //   decoration: BoxDecoration(
+                                  //     color: Colors.orange,
+                                  //     borderRadius: BorderRadius.circular(15),
+                                  //     image: DecorationImage(
+                                  //       image: AssetImage('assets/Twitch Card.png'),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  // Container(
+                                  //   height: cardHeight,
+                                  //   width: cardWidth,
+                                  //   decoration: BoxDecoration(
+                                  //     color: Colors.yellow,
+                                  //     borderRadius: BorderRadius.circular(15),
+                                  //   ),
+                                  // ),
+                                  // Container(
+                                  //   height: cardHeight,
+                                  //   width: cardWidth,
+                                  //   decoration: BoxDecoration(
+                                  //     color: Colors.green,
+                                  //     borderRadius: BorderRadius.circular(15),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
                           ),
-                          Container(
-                            height: 550,
-                            color: Colors.grey[800],
-                            child: Center(
-                              child: SizedBox(
-                                height: cardHeight,
-                                width: cardWidth,
-                                child: PageView(
-                                  controller: _controller,
-                                  scrollDirection: Axis.horizontal,
-                                  children:[
-                                    Container(
-                                      height: cardHeight,
-                                      width: cardWidth,
-                                      decoration: BoxDecoration(
-                                        //color: Colors.red,
-                                        borderRadius: BorderRadius.circular(15),
-                                        image: DecorationImage(
-                                          image: AssetImage('assets/Youtube Card.png'),
-                                        ),
-
-                                      ),
-                                    ),
-                                    Container(
-                                      height: cardHeight,
-                                      width: cardWidth,
-                                      decoration: BoxDecoration(
-                                        color: Colors.orange,
-                                        borderRadius: BorderRadius.circular(15),
-                                        image: DecorationImage(
-                                          image: AssetImage('assets/Twitch Card.png'),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: cardHeight,
-                                      width: cardWidth,
-                                      decoration: BoxDecoration(
-                                        color: Colors.yellow,
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: cardHeight,
-                                      width: cardWidth,
-                                      decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height:40,
-                            color: Colors.grey[900],//Color.fromRGBO(100,0,150,1),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                    childCount: 1,
-                  ),
+                        ),
+                        Container(
+                          height:40,
+                          color: Colors.grey[900],//Color.fromRGBO(100,0,150,1),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                  childCount: 1,
                 ),
-              ],
-            ),
-          ),
+              ),
+            ],
+          ) : Loading(),
         );
       }
     );

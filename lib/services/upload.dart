@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:gamers_and_content_creators/services/database.dart';
+import 'package:gamers_and_content_creators/shared/card_enum.dart';
 import 'package:provider/provider.dart';
+import 'package:gamers_and_content_creators/shared/card_enum.dart';
 
 class Uploader extends StatefulWidget {
   final File file;
@@ -22,7 +24,7 @@ class _UploaderState extends State<Uploader> {
   //set the file path to userid-profile_pic
   //copy the file path into the user's firestore document
   //start the upload process COMPLETE
-  void _startUpload(String uid, String name, String age, String location, int month, int day, int year, String backgroundImagePath) async {
+  void _startUpload(String uid, String name, String age, String location, int month, int day, int year, String backgroundImagePath, List<String> cards, String ytChannelId) async {
     String filePath = 'images/$uid-profile-image.jpg';
 
     await DatabaseService(uid: uid).updateUserData(
@@ -34,6 +36,8 @@ class _UploaderState extends State<Uploader> {
         year,
         filePath,
         backgroundImagePath,
+        cards,
+        ytChannelId,
     );
 
     //This starts the upload
@@ -84,7 +88,9 @@ class _UploaderState extends State<Uploader> {
                     userData.month,
                     userData.day,
                     userData.year,
-                    userData.location
+                    userData.location,
+                    userData.cards,
+                    userData.ytChannelId,
                 );
               },
             );

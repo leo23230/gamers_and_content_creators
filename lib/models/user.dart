@@ -1,3 +1,5 @@
+import 'package:gamers_and_content_creators/shared/card_enum.dart';
+
 class UserModel {
 
   final String uid;
@@ -15,8 +17,10 @@ class UserData {
   final int year;
   final String profileImagePath;
   final String backgroundImagePath;
+  final List<dynamic> cards;
+  final String ytChannelId;
 
   UserData({this.uid, this.name, this.age, this.location, this.month, this.day, this.year,
-  this.profileImagePath, this.backgroundImagePath});
+  this.profileImagePath, this.backgroundImagePath, this.cards, this.ytChannelId});
 
 }

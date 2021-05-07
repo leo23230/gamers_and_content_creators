@@ -27,7 +27,7 @@ class _AuthenticateButtonsState extends State<AuthenticateButtons> {
             width: 200.0,
             height: 50.0,
             child: FlatButton(
-              color: Colors.pink[400],
+              color: Color.fromRGBO(0,0,0,0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24.0),
                 side: BorderSide(color: Colors.white, width: 2),
@@ -43,47 +43,47 @@ class _AuthenticateButtonsState extends State<AuthenticateButtons> {
             ),
           ),
           SizedBox(height: 30.0),
+          // SizedBox(
+          //   width: 200.0,
+          //   height: 50.0,
+          //   child: FlatButton(
+          //     color: Colors.deepPurpleAccent[100],
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(24.0),
+          //       side: BorderSide(color: Colors.white, width: 2),
+          //     ),
+          //     hoverColor: Colors.white,
+          //     child: Text(
+          //       'Discord Sign In',
+          //       style: GoogleFonts.lato(
+          //         fontSize: 22,
+          //         color: Colors.white,
+          //       ),
+          //     ),
+          //     onPressed: () async {
+          //       String url = _oauth.discordLoginUrl;
+          //       if(await canLaunch(url)){
+          //         await(launch(url));
+          //         dynamic result = await _auth.signInAnon();
+          //         if(result == null){
+          //           print('error signing in');
+          //         } else {
+          //           print('signed in');
+          //           print(result.uid);
+          //         }
+          //       }
+          //       else{
+          //         throw 'Could not launch $url';
+          //       }
+          //     },
+          //   ),
+          // ),
+          //SizedBox(height: 30),
           SizedBox(
             width: 200.0,
             height: 50.0,
             child: FlatButton(
-              color: Colors.deepPurpleAccent[100],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24.0),
-                side: BorderSide(color: Colors.white, width: 2),
-              ),
-              hoverColor: Colors.white,
-              child: Text(
-                'Discord Sign In',
-                style: GoogleFonts.lato(
-                  fontSize: 22,
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: () async {
-                String url = _oauth.discordLoginUrl;
-                if(await canLaunch(url)){
-                  await(launch(url));
-                  dynamic result = await _auth.signInAnon();
-                  if(result == null){
-                    print('error signing in');
-                  } else {
-                    print('signed in');
-                    print(result.uid);
-                  }
-                }
-                else{
-                  throw 'Could not launch $url';
-                }
-              },
-            ),
-          ),
-          SizedBox(height: 30),
-          SizedBox(
-            width: 200.0,
-            height: 50.0,
-            child: FlatButton(
-              color: Colors.deepOrangeAccent[400],
+              color: Color.fromRGBO(0,0,0,0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24.0),
                 side: BorderSide(color: Colors.white, width: 2),

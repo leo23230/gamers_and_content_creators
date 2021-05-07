@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:gamers_and_content_creators/screens/home/home.dart';
 import 'package:gamers_and_content_creators/screens/home/subscreens/profile_settings.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -29,9 +30,9 @@ class _ProfileState extends State<Profile> {
     return Column(
         children:[
           SizedBox(
-            height:120,
+            height:110,
             child: Card(
-              color: Color.fromRGBO(255, 255, 255, 0.2),
+              color: Colors.grey[850],
               child: ListTile(
                 visualDensity: VisualDensity(vertical: 4),
                 leading: Image.asset('assets/Dante.png', scale: 0.5),
@@ -45,8 +46,8 @@ class _ProfileState extends State<Profile> {
                 subtitle: Text(
                   'Profile Settings',
                   style: GoogleFonts.lato(
-                    fontSize: 24,
-                    color: Colors.white,
+                    fontSize: 26,
+                    color: Colors.grey[200],
                   ),
                 ),
                 onTap: (){Navigator.pushNamed(context, '/profile-settings');},//Navigator.pushNamed(context, '/profile-settings');
@@ -54,7 +55,7 @@ class _ProfileState extends State<Profile> {
             ),
           ),
           Card(
-            color: Color.fromRGBO(255, 255, 255, 0.2),
+            color: Colors.grey[850],
             child: ListTile(
               leading: Icon(
                 Icons.settings,
@@ -64,21 +65,21 @@ class _ProfileState extends State<Profile> {
                 'App Settings',
                 style: GoogleFonts.lato(
                   fontSize: 20,
-                  color: Colors.grey[900],
+                  color: Colors.grey[200],
                 ),
               ),
               subtitle: Text(
                   'Change Location Settings',
                 style: GoogleFonts.lato(
                   fontSize: 16,
-                  color: Colors.grey[900],
+                  color: Colors.grey[500],
                 ),
               ),
               onTap: (() => _showSettings()),
             ),
           ),
           Card(
-            color: Color.fromRGBO(255, 255, 255, 0.2),
+            color: Colors.grey[850],
             child: ListTile(
               leading: Icon(
                 Icons.money,
@@ -88,21 +89,21 @@ class _ProfileState extends State<Profile> {
                 'Free Points!',
                 style: GoogleFonts.lato(
                   fontSize: 20,
-                  color: Colors.grey[900],
+                  color: Colors.grey[200],
                 ),
               ),
               subtitle: Text(
                 'Tap to earn free points!',
                 style: GoogleFonts.lato(
                   fontSize: 16,
-                  color: Colors.grey[900],
+                  color: Colors.grey[500],
                 ),
               ),
               onTap: ((){}),
             ),
           ),
           Card(
-            color: Color.fromRGBO(255, 255, 255, 0.2),
+            color: Colors.grey[850],
             child: ListTile(
               leading: Icon(
                 Icons.monetization_on,
@@ -112,19 +113,22 @@ class _ProfileState extends State<Profile> {
                 'Deals!',
                 style: GoogleFonts.lato(
                   fontSize: 20,
-                  color: Colors.grey[900],
+                  color: Colors.grey[200],
                 ),
               ),
               subtitle: Text(
                 'Get great deals for using our app!',
                 style: GoogleFonts.lato(
                   fontSize: 16,
-                  color: Colors.grey[900],
+                  color: Colors.grey[500],
                 ),
               ),
               onTap: ((){}),
             ),
           ),
+
+
+
       ],
     );
   }

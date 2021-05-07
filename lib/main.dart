@@ -1,3 +1,4 @@
+import 'package:gamers_and_content_creators/screens/home/subscreens/card_manager.dart';
 import 'package:gamers_and_content_creators/screens/wrapper.dart';
 import 'package:gamers_and_content_creators/services/auth.dart';
 import 'package:flutter/material.dart';
@@ -50,12 +51,17 @@ class _MyAppState extends State<MyApp> {
         )*/
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         routes: {
           '/':(context) => Wrapper(),
           '/home': (context) => Home(),
           '/profile-settings': (context) => ProfileSettings(),
+          '/card-manager' : (context) => CardManager(),
         },
         initialRoute: '/',
+        theme: ThemeData(
+          accentColor: Colors.orange,
+        ),
       ),
       //home: Wrapper(),
     );

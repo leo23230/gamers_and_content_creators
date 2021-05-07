@@ -10,6 +10,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'dart:async';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gamers_and_content_creators/services/google_auth.dart';
+import 'package:http/http.dart' as http;
 
 class UserDataForm extends StatefulWidget {
   @override
@@ -17,6 +20,16 @@ class UserDataForm extends StatefulWidget {
 }
 
 class _UserDataFormState extends State<UserDataForm> {
+  User user;
+  http.Response response;
+
+  String channelId;
+
+  Future click() async { //sets channelId to the String returned from signInWithGoogle method
+    channelId = await signInWithGoogle();
+    print(channelId);
+  }
+
   bool loading = false;
   File _selectedImage;
 
@@ -26,11 +39,11 @@ class _UserDataFormState extends State<UserDataForm> {
 
 
   // text field state
-  String _name = '';
-  String _age = '';
-  int _monthNumber = 0;
-  int _day = 0;
-  int _year = 0;
+  String _name;
+  String _age;
+  int _monthNumber;
+  int _day;
+  int _year;
   String _location = '';
   String error = '';
 
@@ -60,6 +73,18 @@ class _UserDataFormState extends State<UserDataForm> {
     }
   }
 
+  int monthCalculation(val){
+    _monthNumber = val;
+    if(isThirtyOne()) numberOfDays = 31;
+    else if (isFebruary()) numberOfDays = 28;
+    else numberOfDays = 30;
+    days = [];
+    for(int i = 0; i < numberOfDays; i++){
+      days.add(i+1);
+    }
+    return _monthNumber;
+  }
+
   //get Image function
   getImage(ImageSource source) async{
     File image = await ImagePicker.pickImage(source: source);
@@ -81,6 +106,29 @@ class _UserDataFormState extends State<UserDataForm> {
     }
   }
 
+  //GoogleSignIn
+
+  Widget googleLoginButton(){
+    return OutlineButton(
+      onPressed: this.click,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
+      splashColor: Colors.grey,
+      borderSide: BorderSide(color: Colors.grey),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(0,10,0,10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min, //as small as possible
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget> [
+            Image(image:AssetImage('assets/YoutubeLogo.png'), height: 35),
+            Padding(padding: EdgeInsets.only(left: 10), child: Text('Connect Youtube', style: TextStyle(color: Colors.grey, fontSize: 24)))
+          ],
+        ),
+      )
+    );
+  }
+
+  //Main Build Function
   @override
   Widget build(BuildContext context) {
 
@@ -92,6 +140,13 @@ class _UserDataFormState extends State<UserDataForm> {
         if(snapshot.hasData){
 
           UserData userData = snapshot.data;
+          // _day = userData.day;
+          // _monthNumber = userData.month;
+          // _year = userData.year;
+
+          if(userData.month!= 0){
+            monthCalculation(_monthNumber);
+          }
 
           return Container(
             padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
@@ -119,7 +174,7 @@ class _UserDataFormState extends State<UserDataForm> {
                       },
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 10.0),
                   Text(
                     'Date of Birth',
                     textAlign: TextAlign.left,
@@ -133,6 +188,7 @@ class _UserDataFormState extends State<UserDataForm> {
                         SizedBox(
                           width: 100,
                           child: DropdownButtonFormField(
+                            value: userData.month,
                             items: months.map((month){
                               return DropdownMenuItem(
                                 value: months.indexOf(month) + 1,
@@ -159,6 +215,7 @@ class _UserDataFormState extends State<UserDataForm> {
                         SizedBox( //Day Drop Down
                           width: 75,
                           child: DropdownButtonFormField(
+                            value: userData.day,
                             items: days.map((day){
                               return DropdownMenuItem(
                                 value: day,
@@ -179,10 +236,7 @@ class _UserDataFormState extends State<UserDataForm> {
                             keyboardType: TextInputType.number,
                             validator: (val) {
                               var now = new DateTime.now();
-                              if(val.isEmpty){
-                                return 'Enter a year';
-                              }
-                              else if(now.year - int.parse(val) > 124 || int.parse(val) > now.year){
+                              if(now.year - int.parse(val) > 124 || int.parse(val) > now.year){
                                 return 'Enter a valid year';
                               }
                               else return null;
@@ -194,20 +248,26 @@ class _UserDataFormState extends State<UserDataForm> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      RaisedButton(
-                        child: Text('Camera'),
-                        onPressed: (){getImage(ImageSource.camera);},
-                      ),
-                      RaisedButton(
-                        child: Text('Gallery'),
-                        onPressed: (){getImage(ImageSource.gallery);},
-                      ),
-                    ],
-                  ),
+                  SizedBox(height: 10.0),
+
+                  // //Google sign-in//
+                  // Align(
+                  //   alignment: Alignment.center,
+                  //   child: googleLoginButton(),
+                  // ),
+                  //
+                  // RaisedButton(
+                  //   color: Colors.pink[500],
+                  //   child: Text(
+                  //     'Disconnect Youtube',
+                  //     style: GoogleFonts.lato(
+                  //       fontSize: 18,
+                  //       color: Colors.white,
+                  //     ),
+                  //   ),
+                  //   onPressed: (){signOutOfGoogle();},
+                  // ),
+
                   RaisedButton(
                     color: Colors.pink[500],
                     child: Text(
@@ -218,10 +278,13 @@ class _UserDataFormState extends State<UserDataForm> {
                       ),
                     ),
                     onPressed: () async{
+                      _name == null ? _name = userData.name : null;
+                      _day == null ? _day = userData.day : null;
+                      _monthNumber == null ? _monthNumber = userData.day : null;
+                      _year == null ? _year = userData.year : null;
+                      _age == null ? _age = userData.age : null;
+                      _location == null ? _location = userData.location : null;
                       if(_formKey.currentState.validate() && _dobFormKey.currentState.validate()){
-                        if(_name.length < 1) _name = userData.name;
-                        if(_age.length < 1) _age = userData.age;
-                        if(_location.length < 1) _location = userData.location;
                         var now = new DateTime.now();
                         var dob = new DateTime(_year,_monthNumber, _day);
                         _age = Age.dateDifference(fromDate: dob, toDate: now, includeToDate:false).years.toString();
@@ -236,14 +299,16 @@ class _UserDataFormState extends State<UserDataForm> {
                             _year ?? userData.year,
                               //We don't need to update these values here
                             userData.profileImagePath,
-                            userData.backgroundImagePath
+                            userData.backgroundImagePath,
+                            userData.cards,
+                            channelId ?? userData.ytChannelId,
                           );
                           Navigator.pop(context);
                         }
                       }
                     },
                   ),
-                  SizedBox(height: 12.0),
+                  SizedBox(height: 10.0),
                   Text(
                     error,
                     textAlign: TextAlign.center,

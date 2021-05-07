@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gamers_and_content_creators/models/profile.dart';
 import 'package:gamers_and_content_creators/models/user.dart';
+import 'package:gamers_and_content_creators/shared/card_enum.dart';
 
 class DatabaseService {
 
@@ -13,7 +14,7 @@ class DatabaseService {
   final CollectionReference profilesCollection = FirebaseFirestore.instance.collection('profiles');
 
   Future updateUserData(String name, String age, String location, int month, int day, int year,
-      String profileImagePath, String backgroundImagePath) async {
+      String profileImagePath, String backgroundImagePath, List <dynamic> cards, String ytChannelId) async {
     return await profilesCollection.doc(uid).set({
       'name': name,
       'age' : age,
@@ -23,10 +24,11 @@ class DatabaseService {
       'year': year,
       'profileImagePath': profileImagePath,
       'backgroundImagePath': backgroundImagePath,
+      'cards': cards,
+      'ytChannelId': ytChannelId,
 
     });
   }
-
 
   //function that gets a profile from a query snapshot
   //Will use this for swiping screen (Home)
@@ -41,7 +43,9 @@ class DatabaseService {
         day: doc.data()['day'] ?? 0,
         year: doc.data()['year'] ?? 0,
         profileImagePath: doc.data()['profileImagePath'],
-        backgroundImagePath: doc.data()['backgroundImagePath']
+        backgroundImagePath: doc.data()['backgroundImagePath'],
+        cards: doc.data()['cards'] ?? [],
+        ytChannelId: doc.data()['ytChannelId'] ?? '',
       );
     }).toList();
   }
@@ -58,8 +62,10 @@ class DatabaseService {
       month: snapshot.data()['month'],
       day: snapshot.data()['day'],
       year: snapshot.data()['year'],
-        profileImagePath: snapshot.data()['profileImagePath'],
-        backgroundImagePath: snapshot.data()['backgroundImagePath']
+      profileImagePath: snapshot.data()['profileImagePath'],
+      backgroundImagePath: snapshot.data()['backgroundImagePath'],
+      cards: snapshot.data()['cards'],
+      ytChannelId: snapshot.data()['ytChannelId'],
     );
   }
 
@@ -70,7 +76,6 @@ class DatabaseService {
 
   //get user document stream
   Stream<UserData> get userData {
-    return profilesCollection.doc(uid).snapshots()
-      .map(_userDataFromSnapshot); //every time the doc changes we get a snapshot
+    return profilesCollection.doc(uid).snapshots().map(_userDataFromSnapshot); //every time the doc changes we get a snapshot
   }
 }

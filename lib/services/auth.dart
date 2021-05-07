@@ -1,10 +1,13 @@
 import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gamers_and_content_creators/services/database.dart';
+import 'package:gamers_and_content_creators/shared/card_enum.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   // create user obj based on firebase user
   UserModel _userFromFirebaseUser(User user) {
@@ -47,7 +50,7 @@ class AuthService {
       User user = result.user;
 
       //create a new document for the user with their unique uid
-      await DatabaseService(uid: user.uid).updateUserData(name,age,location,month,day,year,'','');
+      await DatabaseService(uid: user.uid).updateUserData(name,age,location,month,day,year,'','', ["Youtube Card","Twitch Card", "Bio Card"], '');//some are blank because not part of the sign up flow
 
       return _userFromFirebaseUser(user);
     } catch (error) {
@@ -59,8 +62,10 @@ class AuthService {
   // sign out
   Future signOut() async {
     try {
+      googleSignIn.signOut();
       return await _auth.signOut();
-    } catch (error) {
+    }
+    catch (error) {
       print(error.toString());
       return null;
     }

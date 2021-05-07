@@ -21,9 +21,9 @@ class _AuthenticateState extends State<Authenticate> {
         decoration:BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              'assets/his and her setup.jpg',
+              'assets/binxy bg.jpg',
             ),
-            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.dstATop),
+            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.7), BlendMode.dstATop),
             fit: BoxFit.fitWidth,
           ),
         ),
@@ -34,15 +34,15 @@ class _AuthenticateState extends State<Authenticate> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Binxy',
-              style: GoogleFonts.pacifico(
+              'Duwō',
+              style: GoogleFonts.montserrat(
                 fontSize: 96.0,
                 color: Colors.white,
               ),
             ),
             Text(
                 'Content creators connect',
-                style: GoogleFonts.pacifico(
+                style: GoogleFonts.montserrat(
                   fontSize: 24.0,
                   color: Colors.white,
                 )

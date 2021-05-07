@@ -35,7 +35,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home> {
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      backgroundColor: Colors.grey[850],
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
           tabs[_currentIndex],
@@ -77,7 +77,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        selectedItemColor: Colors.deepOrange[400],
+        selectedItemColor: Colors.orange[400],
         unselectedItemColor: Colors.grey[600],
         backgroundColor: Colors.grey[900],
         selectedFontSize: 15,

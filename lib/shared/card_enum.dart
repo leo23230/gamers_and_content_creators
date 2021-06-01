@@ -6,7 +6,6 @@ import 'package:gamers_and_content_creators/screens/home/cards/youtube_card.dart
 import 'package:flutter/material.dart';
 import 'package:gamers_and_content_creators/screens/home/preview_cards/preview_cards.dart';
 
-
 enum DuwoCard{
   youtube,
   twitch,
@@ -15,7 +14,7 @@ enum DuwoCard{
   favoriteAnime
 }
 
-Widget enumToWidget(String card, [String channelId]){
+Widget enumToWidget(String card, {String channelId, String bioTitle, String bioBody} ){
   switch(card){
     case 'Youtube Card':
       return YoutubeCard(channelId: channelId);
@@ -24,7 +23,7 @@ Widget enumToWidget(String card, [String channelId]){
       return TwitchCard();
       break;
     case 'Bio Card':
-      return BioCard();
+      return BioCard(bioTitle: bioTitle, bioBody: bioBody);
       break;
     case 'Video Game Card':
       return FavoriteVideoGamesCard();
@@ -52,6 +51,9 @@ Widget stringToPreview(String card){
     case 'Anime Card':
       return AnimePreviewCard();
       break;
+    case 'Astrology':
+      return AstrologyPreviewCard();
+      break;
   }
 }
-final List<dynamic> allCards = ['Youtube Card', 'Twitch Card', 'Bio Card', 'Video Game Card', 'Anime Card'];
+final List<dynamic> allCards = ['Youtube Card', 'Twitch Card', 'Bio Card', 'Video Game Card', 'Anime Card', 'Astrology'];

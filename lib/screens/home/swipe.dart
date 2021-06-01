@@ -1,11 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:gamers_and_content_creators/models/profile.dart';
+import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:gamers_and_content_creators/screens/home/cards/youtube_card.dart';
+import 'package:gamers_and_content_creators/services/database.dart';
+import 'package:gamers_and_content_creators/shared/card_enum.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gamers_and_content_creators/screens/home/home.dart';
 import'package:gamers_and_content_creators/models/channel_model.dart';
 import 'package:gamers_and_content_creators/models/video_model.dart';
 import 'package:gamers_and_content_creators/services/api_service.dart';
 import 'package:gamers_and_content_creators/screens/home/subscreens/video_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 class Swipe extends StatefulWidget {
   @override
@@ -15,9 +22,16 @@ class Swipe extends StatefulWidget {
 class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe> {
   final double cardHeight = 480;
   final double cardWidth = 360;
+  double opacity = 1.0;
   final _controller = PageController(
     initialPage: 0,
   );
+
+  //Real Data Variables//
+  Stream<dynamic> query;
+  int profileCounter = 0;
+  List<Profile> currentProfileBatch;
+  Profile currentProfile;
 
   //FakeData//
   final List <String> pics = [
@@ -62,124 +76,39 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
   ];
   int personIndex = 0;
   ////
-
-  Channel _channel;
+  
   bool _isLoading = false;
   String currentChannelId; //just to launch the channel
 
-  @override
-  void initState(){
-    super.initState();
-    _initChannel();
+  Future getProfiles(String uid, UserData userData) async {
+    query = await DatabaseService(uid: uid).mainQuery(userData.location[1], userData.location[2]);
+    query.listen((value){currentProfileBatch = value;});
+    currentProfile = currentProfileBatch[0];
   }
 
-  _initChannel() async {
-    Channel channel = await APIService.instance
-        .fetchChannel(channelId: channels[personIndex]);
-    setState((){
-      _channel = channel;
-    });
-  }
-
-  _buildProfileInfo(){
-    return GestureDetector(
-      onTap: () {
-        currentChannelId = channels[personIndex];
-        launch('https://www.youtube.com/channel/$currentChannelId');
-      },
-      child: Container(
-        margin: EdgeInsets.fromLTRB(20,0,20,10),
-        padding: EdgeInsets.all(20.0),
-        height: 100.0,
-        decoration: BoxDecoration(
-          color: Color.fromRGBO(50, 50, 50, 0.8),
-          border: Border.all(color: Colors.white, width: 2),
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 35.0,
-              backgroundImage: NetworkImage(_channel.profilePictureUrl),
-            ),
-            SizedBox(width: 12.0),
-            Expanded(
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    _channel.title,
-                    style: GoogleFonts.lato(
-                      fontSize: 22.0,
-                      color: Colors.white,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    '${_channel.subscriberCount} subscribers',
-                    style: GoogleFonts.lato(
-                      fontSize: 18.0,
-                      color: Colors.white,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+  //Image Widgets//
+  Widget blankProfilePicture(){
+    return Container(
+      width: 180,
+      height: 180,
+      decoration: BoxDecoration(
+        border: Border.all(width: 4, color: Colors.white),
+        borderRadius: BorderRadius.all(Radius.circular(90)),
+      ),
+      child: Icon(
+        Icons.person,
+        color: Colors.white,
+        size: 120,
       ),
     );
   }
-
-  _buildVideo(Video video) {
-    return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => VideoScreen(id: video.id),
-        ),
-      ),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-        padding: EdgeInsets.all(10.0),
-        height: 140.0,
-        decoration: BoxDecoration(
-          color: Color.fromRGBO(50, 50, 50, 0.8),
-          border: Border.all(color: Colors.white, width: 2),
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-        ),
-        child: Row(
-          children: <Widget>[
-            Image(
-              width: 140.0,
-              image: NetworkImage(video.thumbnailUrl),
-            ),
-            SizedBox(width: 10.0),
-            Expanded(
-              child: Text(
-                video.title,
-                style: GoogleFonts.lato(
-                  fontSize: 18.0,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  _loadMoreVideos() async {
-    _isLoading = true;
-    List<Video> moreVideos = await APIService.instance
-        .fetchVideosFromPlaylist(playlistId: _channel.uploadPlaylistId);
-    List<Video> allVideos = _channel.videos..addAll(moreVideos);
-    setState(() {
-      _channel.videos = allVideos;
-    });
-    _isLoading = false;
+  ImageProvider getBackgroundImage(String existingBackgroundImagePath){
+    if(existingBackgroundImagePath != ''){
+      return NetworkImage(existingBackgroundImagePath);
+    }
+    else{
+      return AssetImage('assets/clean pc setup.jpg');
+    }
   }
 
   @override
@@ -187,12 +116,17 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
 
   @override
   Widget build(BuildContext context) {
+    UserModel user = Provider.of<UserModel>(context);
+    UserData userData = Provider.of<UserData>(context);
+
+    getProfiles(user.uid, userData);
+
     super.build(context);
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
           alignment: Alignment.topCenter,
-          image: AssetImage(setups[personIndex]),
+          image: getBackgroundImage(currentProfile.backgroundImagePath),
           colorFilter:
             ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
         ),
@@ -206,7 +140,27 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
             floating: false,
             toolbarHeight: 0,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(pics[personIndex]),
+              background: Opacity(
+                opacity: opacity,
+                child: FlatButton(
+                  onPressed: (){
+                    setState((){});
+                  },
+                  child: (currentProfile.profileImagePath == '') ? blankProfilePicture() :
+              Container(
+              width: 180,
+              height: 180,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(currentProfile.profileImagePath),
+                  fit: BoxFit.cover,
+                ),
+                border: Border.all(width: 4, color: Colors.white),
+                borderRadius: BorderRadius.all(Radius.circular(100)),
+              ),
+            ),
+                )
+              ),
               title: ButtonBar(
                 alignment: MainAxisAlignment.spaceBetween,
                 children:[
@@ -216,17 +170,17 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
                     child: FloatingActionButton(
                       heroTag: "btn1",
                       onPressed: () {
-                        if(personIndex < 5){
-                          personIndex += 1;
-                          setState((){});
-                          print(personIndex);
-                          _initChannel();
-                        }
-                      else{
-                        personIndex = 0;
+                      if(profileCounter < currentProfileBatch.length -1){
+                        profileCounter += 1;
                         setState((){});
-                        print(personIndex);
-                        _initChannel();
+                        currentProfile = currentProfileBatch[profileCounter];
+                        //_initChannel();
+                      }
+                      else{
+                        profileCounter = 0;
+                        setState((){});
+                        currentProfile = currentProfileBatch[profileCounter];
+                        //_initChannel();
                         }
                       },
                       child: Icon(Icons.remove),
@@ -240,17 +194,17 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
                     child: FloatingActionButton(
                       heroTag: "btn2",
                       onPressed: (){
-                        if(personIndex < 5){
-                          personIndex += 1;
+                        if(profileCounter < currentProfileBatch.length-1){
+                          profileCounter += 1;
                           setState((){});
-                          print(personIndex);
-                          _initChannel();
+                          currentProfile = currentProfileBatch[profileCounter];
+                          //_initChannel();
                         }
                         else{
-                          personIndex = 0;
+                          profileCounter = 0;
                           setState((){});
-                          print(personIndex);
-                          _initChannel();
+                          currentProfile = currentProfileBatch[profileCounter];
+                          //_initChannel();
                         }
                       },
                       child: Icon(Icons.add),
@@ -278,7 +232,7 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
                           children: [
                             //SizedBox(width: 30),
                             Text(
-                              names[personIndex],
+                              currentProfile.name,
                               style: GoogleFonts.lato(
                                 fontSize: 24,
                                 color: Colors.white,
@@ -286,7 +240,7 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
                             ),
                             //SizedBox(width: 190),
                             Text(
-                              'Age: ' + ages[personIndex],
+                              'Age: ' + currentProfile.age,
                               style: GoogleFonts.lato(
                                 fontSize: 24,
                                 color: Colors.white,
@@ -307,105 +261,31 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
                             controller: _controller,
                             scrollDirection: Axis.horizontal,
                             children:[
-                              YoutubeCard(channelId: channels[personIndex]),
-                              // Container(
-                              //   height: cardHeight,
-                              //   width: cardWidth,
-                              //   decoration: BoxDecoration(
-                              //     border: Border.all(color: Colors.white, width: 4),
-                              //     borderRadius: BorderRadius.circular(20),
-                              //     color: Color.fromRGBO(70, 0, 0, 1),
-                              //   ),
-                              //   child: Column( // YOUTUBE CARD
-                              //     children: [
-                              //       Container(
-                              //         child: Image.asset('assets/YoutubeLogo.png',scale: 8),
-                              //       ),
-                              //       Container(
-                              //         height:400,
-                              //         child: _channel != null
-                              //             ?ListView.builder(
-                              //             itemCount: 1 + _channel.videos.length,
-                              //             itemBuilder: (BuildContext context, int index){
-                              //               if(index == 0) {
-                              //                 return _buildProfileInfo();
-                              //               }
-                              //               Video video = _channel.videos[index - 1];
-                              //               return _buildVideo(video);
-                              //             }
-                              //           )
-                              //         : Center(
-                              //           child: CircularProgressIndicator(
-                              //             valueColor: AlwaysStoppedAnimation<Color>(Colors.red)
-                              //             ),
-                              //           ),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
-                              Container( //TWITCH
-                                height: cardHeight,
-                                width: cardWidth,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.white, width: 4),
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Color.fromRGBO(50, 0, 80, 1),
+                              for(int i = 0; i < currentProfile.cards.length; i++) //This creates a physical card for ever item in the cards list
+                                enumToWidget( //this is where we pass in all of the data for all of the cards
+                                  currentProfile.cards[i],
+                                  channelId: currentProfile.ytChannelId,
+                                  bioTitle: currentProfile.bioTitle,
+                                  bioBody: currentProfile.bioBody,
                                 ),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      child: Image.asset('assets/TwitchLogo.png',scale: 6),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // Container( //old twitch card
-                              //   height: cardHeight,
-                              //   width: cardWidth,
-                              //   decoration: BoxDecoration(
-                              //     color: Colors.orange,
-                              //     borderRadius: BorderRadius.circular(15),
-                              //     image: DecorationImage(
-                              //       image: AssetImage('assets/Twitch Card.png'),
-                              //     ),
-                              //   ),
-                              // ),
-                              Container(
-                                height: cardHeight,
-                                width: cardWidth,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[800],
-                                  border: Border.all(color: Colors.white, width: 4),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      'Bio',
-                                      style: GoogleFonts.lato(
-                                        fontSize: 40,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                height: cardHeight,
-                                width: cardWidth,
-                                decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                              ),
                             ],
                           ),
                         ),
                       ),
                     ),
                     Container(
-                      height:40,
+                      height:50,
                       color: Colors.grey[900],//Color.fromRGBO(100,0,150,1),
+                      child: Center(
+                        child: Text(
+                          currentProfile.location != [] ? currentProfile.location[0] : '',
+                          style: GoogleFonts.lato(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
                   ],
                 ),

@@ -22,9 +22,9 @@ class DynamicLinkService{
 
   void _handleDeepLink (PendingDynamicLinkData data) async {
     final Uri deepLink = data?.link;
-    final Map<String, String> query = deepLink.queryParameters;
+    //final Map<String, String> query = deepLink.queryParameters;
     if(deepLink != null){
-      print('_handleDeepLink | deepLink: $query');
+      print('_handleDeepLink | deepLink:');
     }
   }
 }

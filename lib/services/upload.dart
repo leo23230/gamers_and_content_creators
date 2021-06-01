@@ -7,6 +7,42 @@ import 'package:gamers_and_content_creators/shared/card_enum.dart';
 import 'package:provider/provider.dart';
 import 'package:gamers_and_content_creators/shared/card_enum.dart';
 
+class PictureUploader {
+  final String uid;
+  final File file;
+  final String fileName;
+
+  PictureUploader({this.uid,this.file, this.fileName});
+
+  UploadTask _uploadTask;
+  final FirebaseStorage _storage = FirebaseStorage(storageBucket: 'gs://gamers-and-content-creators.appspot.com');
+
+  Future<String> startUpload() async {
+
+    String fileName = this.fileName;
+    String filePath = 'images/$uid-$fileName';
+    String url;
+
+    //This starts the upload
+    _uploadTask = _storage.ref().child(filePath).putFile(this.file);
+
+    await _uploadTask.whenComplete(()async {url = await getDownloadUrl(filePath);});
+
+    return url;
+  }
+
+  Future<String> getDownloadUrl(String imagePath) async{
+    print('upload complete');
+
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference imageRef = storage.ref().child(imagePath);
+    String imageUrl = await imageRef.getDownloadURL();
+
+    return imageUrl;
+  }
+
+}
+
 class Uploader extends StatefulWidget {
   final File file;
 
@@ -24,21 +60,9 @@ class _UploaderState extends State<Uploader> {
   //set the file path to userid-profile_pic
   //copy the file path into the user's firestore document
   //start the upload process COMPLETE
-  void _startUpload(String uid, String name, String age, String location, int month, int day, int year, String backgroundImagePath, List<String> cards, String ytChannelId) async {
-    String filePath = 'images/$uid-profile-image.jpg';
+  Future _startUpload(dynamic uid) async {
 
-    await DatabaseService(uid: uid).updateUserData(
-        name,
-        age,
-        location,
-        month,
-        day,
-        year,
-        filePath,
-        backgroundImagePath,
-        cards,
-        ytChannelId,
-    );
+    String filePath = 'images/$uid-profile-image.jpg';
 
     //This starts the upload
     setState((){
@@ -46,9 +70,22 @@ class _UploaderState extends State<Uploader> {
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     UserModel user = Provider.of<UserModel>(context);
+
+    //Download profile image
+    Future getDownloadUrl(String imagePath) async{
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference imageRef = storage.ref().child(imagePath);
+      String imageUrl = await imageRef.getDownloadURL();
+      print(imageUrl);
+      await DatabaseService(uid: user.uid).updateUserData(
+        profileImagePath: imageUrl,
+      );
+    }
 
     var progress;
     if (_uploadTask != null) {
@@ -60,41 +97,24 @@ class _UploaderState extends State<Uploader> {
               print(snapshot.totalBytes / snapshot.bytesTransferred);
             });
             if (progress == 1.0) {
+              var uid = user.uid;
+              getDownloadUrl('images/$uid-profile-image.jpg');
               return Text('Upload Complete', style: TextStyle(fontSize: 14));
             }
             else {
-              return Text('Upload Complete', style: TextStyle(fontSize: 14));
+              return Text('Uploading...', style: TextStyle(fontSize: 14));
             }
           });
     }
     else {
-      return StreamBuilder<UserData>(
-          stream: DatabaseService(uid: user.uid).userData,
-          //listening to a stream from DBService
-          builder: (context,
-              snapshot) { //data down the stream is referred to as a snapshot
-            UserData userData = snapshot.data;
-
-            return FlatButton.icon(
-              label: Text('Upload', style: TextStyle(color: Colors.pink[500])),
-              icon: Icon(Icons.cloud_upload, color: Colors.pink[500]),
-              //color: Colors.pink[500],
-              onPressed: () {
-                _startUpload(
-                    user.uid,
-                    userData.name,
-                    userData.age,
-                    userData.location,
-                    userData.month,
-                    userData.day,
-                    userData.year,
-                    userData.location,
-                    userData.cards,
-                    userData.ytChannelId,
-                );
-              },
-            );
-          });
+      return FlatButton.icon(
+        label: Text('Upload', style: TextStyle(color: Colors.pink[500])),
+        icon: Icon(Icons.cloud_upload, color: Colors.pink[500]),
+        //color: Colors.pink[500],
+        onPressed: () {
+          _startUpload(user.uid);
+        },
+      );
     }
   }
 }

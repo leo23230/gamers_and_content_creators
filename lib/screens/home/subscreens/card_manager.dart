@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:gamers_and_content_creators/services/google_auth.dart';
 import 'package:gamers_and_content_creators/shared/card_enum.dart';
+import 'package:gamers_and_content_creators/shared/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import'package:provider/provider.dart';
 import 'package:gamers_and_content_creators/services/database.dart';
@@ -25,7 +26,6 @@ class _CardManagerState extends State<CardManager> {
 }
 
 
-
 class RealCardManager extends StatefulWidget {
   @override
   _RealCardManagerState createState() => _RealCardManagerState();
@@ -38,10 +38,16 @@ class _RealCardManagerState extends State<RealCardManager> {
 
   List<dynamic> activeCards;
   List<dynamic> addableCards = List<dynamic>();
+  ValueNotifier<int> addableCardLength;
+  //Profile Update Variables//
   String youtubeChannelId;
+  String bioTitle;
+  String bioBody;
 
   @override
   Widget build(BuildContext context) {
+
+    addableCardLength = ValueNotifier<int>(addableCards.length); //whenever the length changes it'll notify listenable builders
 
     UserModel user = Provider.of<UserModel>(context);
     UserData userData = Provider.of<UserData>(context);
@@ -62,16 +68,25 @@ class _RealCardManagerState extends State<RealCardManager> {
       child: Scaffold(
         backgroundColor: Colors.black,
         appBar:AppBar(
+          title: Text(
+            'Card Manager',
+            style: GoogleFonts.lato(fontSize: 24,),
+          ),
           backgroundColor: Colors.pink[500],
         ),
         body:Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ListView(
-            primary: true,
-            children: [
-              CardDeck(),
-              CardPicker(),
-            ],
+          child: ValueListenableBuilder<int>(
+            valueListenable: addableCardLength,
+            builder: (context, addableCardLength, _){
+              return ListView(
+                primary: true,
+                children: [
+                  CardDeck(),
+                  CardPicker(),
+                ],
+              );
+            }
           ),
         ),
       ),
@@ -85,7 +100,7 @@ class CardDeck extends StatefulWidget {
 
 class _CardDeckState extends State<CardDeck> {
 
-  List<dynamic> myItems;// = [DuwoCard.youtube, DuwoCard.twitch, DuwoCard.bio];
+  List<dynamic> myItems;
   String _youtubeChannelId;
 
   @override
@@ -145,6 +160,7 @@ class _CardDeckState extends State<CardDeck> {
                               setState((){
                                 RealCardManager.of(context).activeCards.remove(item);
                                 RealCardManager.of(context).addableCards.add(item);
+                                RealCardManager.of(context).addableCardLength.value = RealCardManager.of(context).addableCards.length;
                               });
                             },
                           ),
@@ -177,17 +193,19 @@ class _CardDeckState extends State<CardDeck> {
             onPressed: () async{
               await DatabaseService(uid: user.uid).updateUserData(
                 //We don't need to update these values here
-                userData.name,
-                userData.age,
-                userData.location,
-                userData.month,
-                userData.day,
-                userData.year,
-                userData.profileImagePath,
-                userData.backgroundImagePath,
+                // userData.name,
+                // userData.age,
+                // userData.location,
+                // userData.month,
+                // userData.day,
+                // userData.year,
+                // userData.profileImagePath,
+                // userData.backgroundImagePath,
                 //
-                myItems,
-                RealCardManager.of(context).youtubeChannelId ?? userData.ytChannelId,
+                cards: myItems,
+                ytChannelId: RealCardManager.of(context).youtubeChannelId ?? userData.ytChannelId,
+                bioTitle: RealCardManager.of(context).bioTitle ?? userData.bioTitle,
+                bioBody: RealCardManager.of(context).bioBody ?? userData.bioBody,
               );
               Navigator.pop(context);
             },
@@ -206,56 +224,156 @@ class CardPicker extends StatefulWidget {
 }
 
 class _CardPickerState extends State<CardPicker> {
+
+  final _formKey = GlobalKey<FormState>();
+
+  //These variables hold the user Input until the update button is pushed
+  String _tempBioTitle;
+  String _tempBioBody;
+
   @override
+
   Widget build(BuildContext context) {
+
     UserModel user = Provider.of<UserModel>(context);
     UserData userData = Provider.of<UserData>(context);
-    // for(int i = 0; i < allCards.length; i++){
-    //   if((widget.addableCards.length < allCards.length - userData.cards.length) && (!widget.addableCards.contains(allCards[i]))) widget.addableCards.add(allCards[i]);
-    //   for(int j = 0; j < userData.cards.length; j++){
-    //     if(allCards[i] == userData.cards[j]){
-    //       widget.addableCards.remove(allCards[i]);
-    //     }
-    //   }
-    // }
-    return GridView.count(
-      primary: false,
-      scrollDirection: Axis.vertical,
-      crossAxisCount: 3,
-      mainAxisSpacing: 0.0,
-      crossAxisSpacing: 0.0,
-      shrinkWrap: true,
-      childAspectRatio: 0.75,
-      children:[
-        for(final item in RealCardManager.of(context).addableCards)
-          Stack(
-            children: [
-              Card(
-                child: stringToPreview(item),
-                elevation: 4,
-              ),
-              IconButton(
-                icon: Icon(Icons.add, color: Colors.white),
-                onPressed: ()async{
-                  switch(item){
-                    case 'Youtube Card':
-                      RealCardManager.of(context).youtubeChannelId= await signInWithGoogle();
-                      break;
-                    case 'Twitch Card':
-                      break;
-                    case 'Bio Card':
-                      break;
-                  }
-                  setState((){
-                    RealCardManager.of(context).activeCards.add(item);
-                    RealCardManager.of(context).addableCards.remove(item);
-                  });
-                },
-              ),
-            ],
 
+    //Functions for switch statement//
+    Future bioForm() async {
+      Future future = showModalBottomSheet (context: context, builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.black,
+            border: Border.all(
+              color: Colors.white,
+              width: 2,
+            )
           ),
-      ],
+          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+          child: Container(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Text(
+                    'Edit Bio Card',
+                    style: GoogleFonts.lato(
+                      fontSize: 26,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  SizedBox( //title
+                    width: 250,
+                    child: TextFormField(
+                      initialValue: userData.bioTitle,
+                      decoration: textInputDecoration,
+                      validator: (val) => val.length > 10 ? 'Title must be less than 10 characters' : null,
+                      onChanged: (val) {_tempBioTitle = val;},
+                    ),
+                  ),
+                  SizedBox(height: 10),//space
+                  SizedBox( //body
+                    width: 250,
+                    //height: 250,
+                    child: TextFormField(
+                      initialValue: userData.bioBody,
+                      decoration: textInputDecoration.copyWith(
+                        hintText: 'Type your bio here',
+                      ),
+                      minLines: 3,
+                      maxLines: 4,
+                      //validator: (val) => val.isEmpty ? 'Please Enter Title' : null,
+                      onChanged: (val) {_tempBioBody = val;},
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  RaisedButton(
+                    color: Colors.pink[500],
+                    child: Text(
+                      'Done',
+                      style: GoogleFonts.lato(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      if(_formKey.currentState.validate()){
+                        Navigator.pop(context);
+                      }
+                      //return "Done Updating Bio Card";
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      });
+      await future.then((void value) => "Done Updating"); //Essential for keeping the variables from updating before the modal sheet closes
+    }
+
+    return Flexible(
+      child: Container(
+        margin: EdgeInsets.fromLTRB(0,8,0,0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey[850],
+        ),
+        child: Column(
+          children: [
+            Text(
+              'Card Library',
+              style: GoogleFonts.lato(fontSize: 28, color: Colors.white),
+            ),
+            Padding(
+              padding: EdgeInsets.all(4),
+              child: GridView.count(
+                primary: false,
+                scrollDirection: Axis.vertical,
+                crossAxisCount: 3,
+                mainAxisSpacing: 0.0,
+                crossAxisSpacing: 0.0,
+                shrinkWrap: true,
+                childAspectRatio: 0.75,
+                children:[
+                  for(final item in RealCardManager.of(context).addableCards)
+                    Stack(
+                      children: [
+                        Card(
+                          child: stringToPreview(item),
+                          elevation: 4,
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add, color: Colors.white),
+                          onPressed: ()async{
+                            switch(item){
+                              case 'Youtube Card':
+                                RealCardManager.of(context).youtubeChannelId = await signInWithGoogle();
+                                break;
+                              case 'Twitch Card':
+                                break;
+                              case 'Bio Card':
+                                await bioForm();
+                                if(_tempBioTitle != null) RealCardManager.of(context).bioTitle = _tempBioTitle;
+                                if(_tempBioBody != null) RealCardManager.of(context).bioBody = _tempBioBody;
+                                break;
+                            }
+                            setState((){
+                              RealCardManager.of(context).activeCards.add(item);
+                              RealCardManager.of(context).addableCards.remove(item);
+                              RealCardManager.of(context).addableCardLength.value = RealCardManager.of(context).addableCards.length;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

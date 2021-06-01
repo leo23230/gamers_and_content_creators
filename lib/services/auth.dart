@@ -44,13 +44,14 @@ class AuthService {
   }
 
   // register with email and password
-  Future registerWithEmailAndPassword(String email, String password, String name, String age, String location, int month, int day, int year) async {
+  Future registerWithEmailAndPassword(String email, String password, String name, String age, List<dynamic> location, int month, int day, int year) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User user = result.user;
 
       //create a new document for the user with their unique uid
-      await DatabaseService(uid: user.uid).updateUserData(name,age,location,month,day,year,'','', ["Youtube Card","Twitch Card", "Bio Card"], '');//some are blank because not part of the sign up flow
+      await DatabaseService(uid: user.uid).updateUserData(name: name,age: age,location: location,month: month,day: day,year: year,
+          profileImagePath: '', backgroundImagePath: '', cards: ["Youtube Card","Twitch Card", "Bio Card"], ytChannelId: '', bioTitle: '', bioBody:'');//some are blank because not part of the sign up flow
 
       return _userFromFirebaseUser(user);
     } catch (error) {

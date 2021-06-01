@@ -34,7 +34,7 @@ class _RegisterState extends State<Register> {
   int _monthNumber = 0;
   int _day = 0;
   int _year = 0;
-  String _location = '';
+  List<dynamic> _location = ['', 3.14, 3.14]; //must have value to be stored in firebase
 
   // Arrays For Drop Down Button Form Fields
   List <String> months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

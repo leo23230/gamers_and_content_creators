@@ -73,7 +73,14 @@ class BioPreviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white, width: 2),
         borderRadius: BorderRadius.circular(10),
-        color: Colors.grey[800],
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Colors.grey[800],
+            Colors.grey[900],
+          ],
+        ),
       ),
       child: Center(
         child: Text(
@@ -94,7 +101,14 @@ class AnimePreviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white, width: 2),
         borderRadius: BorderRadius.circular(10),
-        color: Colors.grey[800],
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Colors.grey[800],
+            Colors.grey[900],
+          ],
+        ),
       ),
       child: Center(
         child: Text(
@@ -116,7 +130,14 @@ class VideoGamePreviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white, width: 2),
         borderRadius: BorderRadius.circular(10),
-        color: Colors.grey[800],
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Colors.grey[800],
+            Colors.grey[900],
+          ],
+        ),
       ),
       child: Center(
         child: Text(
@@ -128,6 +149,66 @@ class VideoGamePreviewCard extends StatelessWidget {
     );
   }
 }
+
+class AstrologyPreviewCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 160,
+      width: 120,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white, width: 2),
+        borderRadius: BorderRadius.circular(10),
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Colors.grey[800],
+            Colors.grey[900],
+          ],
+        ),
+      ),
+      child: Center(
+        child: Text(
+          'Astrology',
+          style: GoogleFonts.lato(fontSize: 24, color: Colors.white),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+}
+
+class OtherCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 160,
+      width: 120,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white, width: 2),
+        borderRadius: BorderRadius.circular(10),
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Colors.grey[800],
+            Colors.grey[900],
+          ],
+        ),
+      ),
+      child: Center(
+        child: Text(
+          'Other',
+          style: GoogleFonts.lato(fontSize: 24, color: Colors.white),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+}
+
+
 
 // Future removeCard(String uid, {String name, String age, String location, int month, int day, int year, String pIP, String bIP, List<dynamic> cards, String ytChannelId}) async {
 //   UserModel user = Provider.of<UserModel>(context);

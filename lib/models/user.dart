@@ -1,5 +1,3 @@
-import 'package:gamers_and_content_creators/shared/card_enum.dart';
-
 class UserModel {
 
   final String uid;
@@ -11,7 +9,8 @@ class UserData {
   final String uid;
   final String name;
   final String age;
-  final String location;
+  final List<dynamic> location;
+  final dynamic geoHash;
   final int month;
   final int day;
   final int year;
@@ -19,8 +18,11 @@ class UserData {
   final String backgroundImagePath;
   final List<dynamic> cards;
   final String ytChannelId;
+  final String bioTitle;
+  final String bioBody;
 
-  UserData({this.uid, this.name, this.age, this.location, this.month, this.day, this.year,
-  this.profileImagePath, this.backgroundImagePath, this.cards, this.ytChannelId});
+  UserData({this.uid, this.name, this.age, this.location, this.geoHash, this.month, this.day, this.year,
+  this.profileImagePath, this.backgroundImagePath, this.cards, this.ytChannelId,
+  this.bioTitle, this.bioBody});
 
 }

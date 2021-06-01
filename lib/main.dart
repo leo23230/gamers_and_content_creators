@@ -1,9 +1,12 @@
 import 'package:gamers_and_content_creators/screens/home/subscreens/card_manager.dart';
+import 'package:gamers_and_content_creators/screens/home/subscreens/map.dart';
+import 'package:gamers_and_content_creators/screens/home/subscreens/user_data_form.dart';
 import 'package:gamers_and_content_creators/screens/wrapper.dart';
 import 'package:gamers_and_content_creators/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gamers_and_content_creators/services/database.dart';
+import 'package:gamers_and_content_creators/services/user_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,7 +17,11 @@ import 'package:gamers_and_content_creators/screens/home/subscreens/profile_sett
 // Add async/await and 2 lines of code to the main function
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
+
+  await UserPreferences.init();
+
   runApp(MyApp());
 }
 
@@ -57,6 +64,8 @@ class _MyAppState extends State<MyApp> {
           '/home': (context) => Home(),
           '/profile-settings': (context) => ProfileSettings(),
           '/card-manager' : (context) => CardManager(),
+          '/user-info' : (context) => UserDataForm(),
+          '/map': (context) => MapWidget(),
         },
         initialRoute: '/',
         theme: ThemeData(

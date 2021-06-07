@@ -1,5 +1,5 @@
 class Message {
-  final DateTime createdAt;
+  final dynamic createdAt;
   final String message;
   final String sentBy;
 

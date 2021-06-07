@@ -1,5 +1,6 @@
 class Profile {
 
+  final String uid;
   final String name;
   final String age;
   final List<dynamic> location;
@@ -13,9 +14,12 @@ class Profile {
   final String ytChannelId;
   final String bioTitle;
   final String bioBody;
+  final List<dynamic> liked;
+  final List<dynamic> passed;
+  final List<dynamic> matches;
 
-  Profile({this.name, this.age, this.location, this.geoHash, this.month, this.day, this.year,
+  Profile({this.uid, this.name, this.age, this.location, this.geoHash, this.month, this.day, this.year,
   this.profileImagePath, this.backgroundImagePath, this.cards, this.ytChannelId,
-  this.bioTitle, this.bioBody});
+  this.bioTitle, this.bioBody, this.liked, this.passed, this.matches});
 
 }

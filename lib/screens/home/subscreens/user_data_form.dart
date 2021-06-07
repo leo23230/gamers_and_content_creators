@@ -296,7 +296,7 @@ class _UserDataFormState extends State<UserDataForm> {
                                         ),
                                         FlatButton(
                                           onPressed:(() async{
-                                            getImage(ImageSource.gallery, 1, 1);
+                                            await getImage(ImageSource.gallery, 1, 1);
                                             setState(() {
                                               if(_selectedImage != null)_profileImage = _selectedImage;
                                               Navigator.pop(context); //dismiss alert dialog

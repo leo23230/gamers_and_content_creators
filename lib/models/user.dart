@@ -20,9 +20,12 @@ class UserData {
   final String ytChannelId;
   final String bioTitle;
   final String bioBody;
+  final List<dynamic> liked;
+  final List<dynamic> passed;
+  final List<dynamic> matches;
 
   UserData({this.uid, this.name, this.age, this.location, this.geoHash, this.month, this.day, this.year,
   this.profileImagePath, this.backgroundImagePath, this.cards, this.ytChannelId,
-  this.bioTitle, this.bioBody});
+  this.bioTitle, this.bioBody, this.liked, this.passed, this.matches});
 
 }

@@ -1,6 +1,7 @@
 import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gamers_and_content_creators/services/database.dart';
+import 'package:gamers_and_content_creators/services/user_preferences.dart';
 import 'package:gamers_and_content_creators/shared/card_enum.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -52,7 +53,7 @@ class AuthService {
       //create a new document for the user with their unique uid
       await DatabaseService(uid: user.uid).updateUserData(name: name,age: age,location: location,month: month,day: day,year: year,
           profileImagePath: '', backgroundImagePath: '', cards: ["Youtube Card","Twitch Card", "Bio Card"], ytChannelId: '', bioTitle: '', bioBody:'');//some are blank because not part of the sign up flow
-
+      UserPreferences.setMaxRadius(40);
       return _userFromFirebaseUser(user);
     } catch (error) {
       print(error.toString());

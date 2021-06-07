@@ -19,12 +19,14 @@ class DatabaseService {
   List<Profile> profiles = List<Profile>();
 
   //Used both to initialize the user data doc and update the existing doc with new data
-  Future updateUserData({String name, String age, List<dynamic> location, dynamic geoHash, int month, int day, int year,
-      String profileImagePath, String backgroundImagePath, List <dynamic> cards, String ytChannelId,
-      String bioTitle, String bioBody}) async {
+  Future updateUserData({String userId, String name, String age, List<dynamic> location, dynamic geoHash,
+    int month, int day, int year, String profileImagePath, String backgroundImagePath,
+    List <dynamic> cards, String ytChannelId, String bioTitle, String bioBody,
+    List<dynamic> liked, List<dynamic> passed, List<dynamic> matches,}) async {
     return await profilesCollection.doc(uid).set({
       //If the optional named parameter = null we don't overwrite the existing value
       //could not use ternary operator
+      if(userId != null) 'uid' : userId,
       if(name != null) 'name': name,
       if(age != null) 'age' : age,
       if (location != null) 'location' : location,
@@ -38,6 +40,9 @@ class DatabaseService {
       if(ytChannelId != null) 'ytChannelId': ytChannelId,
       if(bioTitle != null)'bioTitle' : bioTitle,
       if(bioBody != null) 'bioBody' : bioBody,
+      if(liked != null) 'liked' : liked,
+      if(passed != null) 'passed' : passed,
+      if(matches != null) 'matches' : matches,
     },
       //insures that we merge the data with the existing doc, and don't overwrite the entire doc
         SetOptions(merge:true),
@@ -53,20 +58,24 @@ class DatabaseService {
     //for each document in the List of documents add a profile object to the profiles list
     for(final doc in docs) {
       profiles.add(Profile(
-        name: doc.data()['name'] ?? '',
         //doc.data is a map, so we pass the key 'name' to get value
+        uid: doc.data()['uid'] ?? '',
+        name: doc.data()['name'] ?? '',
         age: doc.data()['age'] ?? '',
-        location: doc.data()['location'] ?? [],
+        location: doc.data()['location'] ?? [''],
         geoHash: doc.data()['geoHash'] ?? null,
         month: doc.data()['month'] ?? 0,
         day: doc.data()['day'] ?? 0,
         year: doc.data()['year'] ?? 0,
         profileImagePath: doc.data()['profileImagePath'] ?? '',
         backgroundImagePath: doc.data()['backgroundImagePath'] ?? '',
-        cards: doc.data()['cards'] ?? [],
+        cards: doc.data()['cards'] ?? [''],
         ytChannelId: doc.data()['ytChannelId'] ?? '',
         bioTitle: doc.data()['bioTitle'] ?? '',
         bioBody: doc.data()['bioBody'] ?? '',
+        liked: doc.data()['liked'] ?? [''],
+        passed: doc.data()['passed'] ?? [''],
+        matches: doc.data()['matches'] ?? [''],
       ));
     }
     return profiles;
@@ -77,7 +86,7 @@ class DatabaseService {
   //This is for profile settings
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
-      uid: uid,
+      uid:uid,
       name: snapshot.data()['name'],
       age: snapshot.data()['age'],
       location: snapshot.data()['location'],
@@ -90,6 +99,9 @@ class DatabaseService {
       ytChannelId: snapshot.data()['ytChannelId'],
       bioTitle: snapshot.data()['bioTitle'],
       bioBody: snapshot.data()['bioBody'],
+      liked: snapshot.data()['liked'],
+      passed: snapshot.data()['passed'],
+      matches: snapshot.data()['matches'],
     );
   }
 
@@ -97,14 +109,22 @@ class DatabaseService {
   //queries profiles collection in firebase based on location and max radius
   //returns a list of profile objects, so the data is easily accessible throughout the application
 
-  mainQuery(double lat, double lng) async {
+  mainQuery(double lat, double lng) {
     GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
-    return await geo.collection(collectionRef: profilesCollection).within(
+    return geo.collection(collectionRef: profilesCollection).within(
       center: center,
       radius: UserPreferences.getMaxRadius(),
       field: 'geoHash',
       strictMode: true,
     ).map(_profileListFromSnapshot);
+  }
+
+  Future<UserData> otherUserDataFromSnapshot ()async{
+    DocumentSnapshot doc;
+    UserData otherUserData;
+    doc = await profilesCollection.doc(uid).get();
+    otherUserData = _userDataFromSnapshot(doc);
+    return otherUserData;
   }
 
   //get profile stream

@@ -43,7 +43,6 @@ class MessagingService {
   //Upload Message Method//
   Future uploadMessage(String message) async{
     //get a reference to the user's messages collection
-    final String conversationId = getConversationId(myUid, otherUid);
     final messagesRef = FirebaseFirestore.instance.collection('conversations/$conversationId/messages');
 
     //upload the message to that user's

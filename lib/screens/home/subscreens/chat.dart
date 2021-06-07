@@ -62,7 +62,16 @@ class _ChatState extends State<Chat> {
                       ),
                       onChanged: (val) => setState((){message = val;})
                     ),
-                  )
+                  ),
+                  FlatButton(
+                    child: Icon(
+                      Icons.send,
+                    ),
+                    onPressed: (){
+                      _controller.clear();
+                      MessagingService(conversationId: conversationId).uploadMessage(message);
+                      },
+                  ),
                 ],
               )
             ),
@@ -84,13 +93,12 @@ class _MessagesState extends State<Messages> {
     return Column(
       children: [
         for(final message in Provider.of<List<Message>>(context))
-          Expanded(
-            child: Container(
-                color: Colors.white,
-                child: Text(
-                  message.message,
-                  style: GoogleFonts.lato(fontSize: 14, color: Colors.black),
-                )
+          Container(
+            margin: EdgeInsets.all(8),
+            color: Colors.white,
+            child: Text(
+              message.message,
+              style: GoogleFonts.lato(fontSize: 18, color: Colors.black),
             ),
           ),
       ],

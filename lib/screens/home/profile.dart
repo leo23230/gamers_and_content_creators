@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamers_and_content_creators/shared/profile_image.dart';
 import 'subscreens/settings.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gamers_and_content_creators/models/profile.dart';
@@ -16,7 +17,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
-
+    UserData userData = Provider.of<UserData>(context);
     void _showSettings(){
       showModalBottomSheet(context: context, builder: (context) {
         return Container(
@@ -41,7 +42,7 @@ class _ProfileState extends State<Profile> {
               color: Colors.grey[850],
               child: ListTile(
                 visualDensity: VisualDensity(vertical: 4),
-                leading: Image.asset('assets/Dante.png', scale: 0.5),
+                leading: SizedBox(width: 70, height: 70, child: ProfileImage(url: userData.profileImagePath)),
                 subtitle: Text(
                   'Profile Settings',
                   style: GoogleFonts.lato(

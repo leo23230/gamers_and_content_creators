@@ -97,7 +97,7 @@ class MessagingService {
   Stream<List<Message>> get messages{
     return FirebaseFirestore.instance
     .collection('conversations/$conversationId/messages')
-    .orderBy('createdAt')
+    .orderBy('createdAt', descending: true)
     .snapshots()
     .map(_messagesFromSnapshot);
   }

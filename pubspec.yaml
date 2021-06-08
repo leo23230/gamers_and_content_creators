@@ -49,6 +49,7 @@ dependencies:
   search_map_place: ^0.3.0
   geoflutterfire: ^2.2.1
   shared_preferences: ^0.5.12+4
+  intl: ^0.16.1
 
 
 

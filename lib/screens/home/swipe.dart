@@ -140,7 +140,6 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
           .createConversation(); //The class needs all of the optional named parameters to use this function
     }
     else{
-      match = false;
       //Just add the user to the myLiked list//
       myLiked.add(currentProfile.uid);
     }

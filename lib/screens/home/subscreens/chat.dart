@@ -116,7 +116,7 @@ class _MessagesState extends State<Messages> {
           return
             (dateTime.day < lastDateTime.day)
                 ? DateSeparator(
-                    dateTime: dateTime,
+                    dateTime: lastDateTime,
                     message: message.message,
                     isMe: message.sentBy == user.uid,
                     time: message.createdAt) // < because its in reverse
@@ -183,7 +183,7 @@ class MessageWidget extends StatelessWidget {
                     borderRadius.subtract(BorderRadius.only(bottomRight: radius))
                     : borderRadius.subtract(BorderRadius.only(bottomLeft: radius))
               ),
-              child: Text(message, style: GoogleFonts.lato(fontSize: 16, color: Colors.white),),
+              child: SelectableText(message, style: GoogleFonts.lato(fontSize: 16, color: Colors.white),),
             ),
             Padding(
               padding: EdgeInsets.all(12),

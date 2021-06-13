@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamers_and_content_creators/shared/blank_profile_picture.dart';
 import 'package:gamers_and_content_creators/shared/profile_image.dart';
 import 'subscreens/settings.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,7 +43,11 @@ class _ProfileState extends State<Profile> {
               color: Colors.grey[850],
               child: ListTile(
                 visualDensity: VisualDensity(vertical: 4),
-                leading: SizedBox(width: 70, height: 70, child: ProfileImage(url: userData.profileImagePath)),
+                leading: SizedBox(
+                    width: 70,
+                    height: 70,
+                    child:(userData!= null) ? ProfileImage(url: userData.profileImagePath, borderWidth: 3.0) : BlankProfilePicture(),
+                ),
                 subtitle: Text(
                   'Profile Settings',
                   style: GoogleFonts.lato(
@@ -69,7 +74,7 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
               subtitle: Text(
-                  'Change Location Settings',
+                  'Help us find the right match for you',
                 style: GoogleFonts.lato(
                   fontSize: 16,
                   color: Colors.grey[500],

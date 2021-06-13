@@ -62,7 +62,7 @@ class _ConversationsListState extends State<ConversationsList> {
             },
             leading: FlatButton(
               onPressed: (){},
-              child: SizedBox(width: 60, height: 60, child: ProfileImage(url: otherUserUrl))
+              child: SizedBox(width: 60, height: 60, child: ProfileImage(url: otherUserUrl, borderWidth: 3.0))
             ),
             title: Text(
               otherUserName,

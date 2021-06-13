@@ -19,9 +19,91 @@ import 'package:url_launcher/url_launcher.dart';
 class Swipe extends StatefulWidget {
   @override
   _SwipeState createState() => _SwipeState();
+
+  static _SwipeState of(BuildContext context) =>
+      context.findAncestorStateOfType<_SwipeState>();
 }
 
 class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe> {
+  bool hasProfilePicture;
+  bool hasLocation;
+  bool hasCards;
+
+  bool checkListCompleted;
+
+  int checkListItemsCompletedOverall;
+
+  Map<String, bool>checkList = Map<String, bool>();
+
+  Map<String, String> checkListText = {
+    'hasProfilePicture' : 'Set your profile picture',
+    'hasLocation' : 'Set your location',
+    'hasCards': 'Pick out some cards!',
+  };
+
+
+  bool checkListCompletion() {
+    int checkListItemsCompleted = 0;
+
+    checkList.forEach((key, val){
+      if (val == true) checkListItemsCompleted += 1;
+    });
+
+    checkListItemsCompletedOverall = checkListItemsCompleted;
+
+    if(checkListItemsCompleted == checkList.length) return true;
+    else return false;
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    UserModel user = Provider.of<UserModel>(context);
+    UserData userData = Provider.of<UserData>(context);
+
+    checkList = {
+      'hasProfilePicture' : hasProfilePicture,
+      'hasLocation' : hasLocation,
+      'hasCards' : hasCards,
+    };
+
+    if(userData.profileImagePath != "") hasProfilePicture = true;
+    else hasProfilePicture = false;
+    if(userData.location[0] != "none") hasLocation = true;
+    else hasLocation = false;
+    if(userData.cards.length > 1) hasCards = true;
+    else hasCards = false;
+    print(checkList);
+    print(userData.cards);
+    //getProfiles(user.uid, userData);
+    super.build(context);
+
+    if(checkListCompletion()){
+      return (userData!= null) ? StreamProvider.value(
+        value: DatabaseService(
+          uid: user.uid,
+          lat: userData.location[1],
+          lng: userData.location[2],
+          rad: userData.radius,
+        ).profilesList,
+        child: SwipeWidget(),
+      ) : Loading();
+    }
+    else{
+      return Checklist();
+    }
+  }
+}
+
+class SwipeWidget extends StatefulWidget {
+  @override
+  _SwipeWidgetState createState() => _SwipeWidgetState();
+}
+
+class _SwipeWidgetState extends State<SwipeWidget> {
+
   final double cardHeight = 480;
   final double cardWidth = 360;
   double opacity = 1.0;
@@ -32,7 +114,7 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
   //Real Data Variables//
   Stream<dynamic> queryResultStream;
   int profileCounter = 0;
-  List<Profile> currentProfileBatch;
+  List<Profile> currentProfileBatch = List<Profile>();
   Profile currentProfile;
 
   //FakeData//
@@ -76,9 +158,9 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
   //   'UCq3Wpi10SyZkzVeS7vzB5Lw',
   //   'UCq6aw03lNILzV96UvEAASfQ',
   // ];
-  int personIndex = 0;
+  //int personIndex = 0;
   ////
-  
+
   bool _isLoading = false;
   String currentChannelId; //just to launch the channel
 
@@ -88,7 +170,7 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
       print(userData.location);
       queryResultStream = await DatabaseService(uid: uid).mainQuery(userData.location[1], userData.location[2]);
       queryResultStream.listen((value){currentProfileBatch = value;});
-      print(currentProfileBatch[0].name.toString());
+      //print(currentProfileBatch[0].name.toString());
       return currentProfileBatch;
     }
     else{
@@ -97,10 +179,10 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
   }
   List<Profile> filterProfiles (UserData userData) {
     List<Profile> currentProfileBatchUnfiltered = currentProfileBatch;
-     for (final profile in currentProfileBatchUnfiltered){ //filter through results
-       if(profile.uid == userData.uid) currentProfileBatch.remove(profile);
-     }
-     return currentProfileBatch;
+    for (final profile in currentProfileBatchUnfiltered){ //filter through results
+      if(profile.uid == userData.uid) currentProfileBatch.remove(profile);
+    }
+    return currentProfileBatch;
   }
   Future like(Profile currentProfile, UserData userData, String myUid) async{
     //**Scenario One:  User has already been liked by other user**//
@@ -135,8 +217,8 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
       //**Create a conversation for the two users**//
       match = true;
       await MessagingService(myUid: myUid, otherUid: currentProfile.uid,
-        myName: userData.name, myUrl: userData.profileImagePath,
-        otherName: currentProfile.name, otherUrl: currentProfile.profileImagePath)
+          myName: userData.name, myUrl: userData.profileImagePath,
+          otherName: currentProfile.name, otherUrl: currentProfile.profileImagePath)
           .createConversation(); //The class needs all of the optional named parameters to use this function
     }
     else{
@@ -166,7 +248,6 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
       currentProfile = currentProfileBatch[profileCounter];
       //_initChannel();
     }
-
     return;
   }
 
@@ -196,199 +277,279 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
   }
 
   @override
-  bool get wantKeepAlive => true;
-
-  @override
   Widget build(BuildContext context) {
+
     UserModel user = Provider.of<UserModel>(context);
     UserData userData = Provider.of<UserData>(context);
-    //getProfiles(user.uid, userData);
+    currentProfileBatch = Provider.of<List<Profile>>(context);
+    currentProfile = currentProfileBatch[profileCounter];
 
-    super.build(context);
-    return FutureBuilder(
-      future: getProfiles(user.uid, userData),
-      builder: (context, snapshot) {
-        if(snapshot.hasData){
-          currentProfile = currentProfileBatch[profileCounter];
-          return Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                alignment: Alignment.topCenter,
-                image: getBackgroundImage(currentProfile.backgroundImagePath),
-                colorFilter:
-                ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
-              ),
-            ),
-            child: CustomScrollView(
-              slivers: <Widget> [
-                SliverAppBar(
-                  expandedHeight: 260.0,
-                  backgroundColor: Color.fromRGBO(0, 0, 0, 0),
-                  pinned: false,
-                  floating: false,
-                  toolbarHeight: 0,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: Opacity(
-                        opacity: opacity,
-                        child: FlatButton(
-                          onPressed: (){
-                            setState((){});
-                          },
-                          child: (currentProfile.profileImagePath == '') ? blankProfilePicture() :
-                          Container(
-                            width: 180,
-                            height: 180,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(currentProfile.profileImagePath),
-                                fit: BoxFit.cover,
-                              ),
-                              border: Border.all(width: 4, color: Colors.white),
-                              borderRadius: BorderRadius.all(Radius.circular(100)),
-                            ),
-                          ),
-                        )
-                    ),
-                    title: ButtonBar(
-                      alignment: MainAxisAlignment.spaceBetween,
-                      children:[
-                        SizedBox(
-                          width:50,
-                          height:50,
-                          child: FloatingActionButton(
-                            heroTag: "pass",
-                            onPressed: () {
-                              if(profileCounter < currentProfileBatch.length -1){
-                                profileCounter += 1;
-                                setState((){});
-                                currentProfile = currentProfileBatch[profileCounter];
-                                //_initChannel();
-                              }
-                              else{
-                                profileCounter = 0;
-                                setState((){});
-                                currentProfile = currentProfileBatch[profileCounter];
-                                //_initChannel();
-                              }
-                            },
-                            child: Icon(Icons.remove),
-                            backgroundColor: Colors.pink[500],
-                          ),
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          alignment: Alignment.topCenter,
+          image: getBackgroundImage(currentProfile.backgroundImagePath),
+          colorFilter:
+          ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
+        ),
+      ),
+      child: CustomScrollView(
+        slivers: <Widget> [
+          SliverAppBar(
+            expandedHeight: 260.0,
+            backgroundColor: Color.fromRGBO(0, 0, 0, 0),
+            pinned: false,
+            floating: false,
+            toolbarHeight: 0,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Opacity(
+                  opacity: opacity,
+                  child: FlatButton(
+                    onPressed: (){
+                      setState((){});
+                    },
+                    child: (currentProfile.profileImagePath == '') ? blankProfilePicture() :
+                    Container(
+                      width: 180,
+                      height: 180,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(currentProfile.profileImagePath),
+                          fit: BoxFit.cover,
                         ),
-                        //SizedBox(width:50),
-                        SizedBox(
-                          width:50,
-                          height:50,
-                          child: FloatingActionButton(
-                            heroTag: "like",
-                            onPressed: () async{
-                              //figures out which list to put the liked user in based on two scenarios
-                              await like(currentProfile, userData, user.uid);
-                            },
-                            child: Icon(Icons.people),
-                            backgroundColor: Colors.pink[500],
-                          ),
-                        ),
-                      ],
-                    ),
-                    titlePadding: EdgeInsets.all(20),
-                  ),
-                ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate((BuildContext context, int index){
-                    return Container(
-                      child: Column(
-                        children:<Widget> [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(50,50,50,0.6),//Color.fromRGBO(100,0,150,1),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  //SizedBox(width: 30),
-                                  Text(
-                                    currentProfile.name,
-                                    style: GoogleFonts.lato(
-                                      fontSize: 24,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  //SizedBox(width: 190),
-                                  Text(
-                                    'Age: ' + currentProfile.age,
-                                    style: GoogleFonts.lato(
-                                      fontSize: 24,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 550,
-                            color: Colors.black,
-                            child: Center(
-                              child: SizedBox(
-                                height: cardHeight,
-                                width: cardWidth,
-                                child: PageView(
-                                  controller: _controller,
-                                  scrollDirection: Axis.horizontal,
-                                  children:[
-                                    for(int i = 0; i < currentProfile.cards.length; i++) //This creates a physical card for ever item in the cards list
-                                      enumToWidget( //this is where we pass in all of the data for all of the cards
-                                        currentProfile.cards[i],
-                                        channelId: currentProfile.ytChannelId,
-                                        bioTitle: currentProfile.bioTitle,
-                                        bioBody: currentProfile.bioBody,
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height:50,
-                            color: Colors.grey[900],//Color.fromRGBO(100,0,150,1),
-                            child: Center(
-                              child: Text(
-                                currentProfile.location != [] ? currentProfile.location[0] : '',
-                                style: GoogleFonts.lato(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ],
+                        border: Border.all(width: 4, color: Colors.white),
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
-                    );
-                  },
-                    childCount: 1,
+                    ),
+                  )
+              ),
+              title: ButtonBar(
+                alignment: MainAxisAlignment.spaceBetween,
+                children:[
+                  SizedBox(
+                    width:50,
+                    height:50,
+                    child: FloatingActionButton(
+                      heroTag: "pass",
+                      onPressed: () {
+                        if(profileCounter < currentProfileBatch.length -1){
+                          profileCounter += 1;
+                          setState((){});
+                          currentProfile = currentProfileBatch[profileCounter];
+                          //_initChannel();
+                        }
+                        else{
+                          profileCounter = 0;
+                          setState((){});
+                          currentProfile = currentProfileBatch[profileCounter];
+                          //_initChannel();
+                        }
+                      },
+                      child: Icon(Icons.remove),
+                      backgroundColor: Colors.pink[500],
+                    ),
                   ),
+                  //SizedBox(width:50),
+                  SizedBox(
+                    width:50,
+                    height:50,
+                    child: FloatingActionButton(
+                      heroTag: "like",
+                      onPressed: () async{
+                        //figures out which list to put the liked user in based on two scenarios
+                        await like(currentProfile, userData, user.uid);
+                      },
+                      child: Icon(Icons.people),
+                      backgroundColor: Colors.pink[500],
+                    ),
+                  ),
+                ],
+              ),
+              titlePadding: EdgeInsets.all(20),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate((BuildContext context, int index){
+              return Container(
+                child: Column(
+                  children:<Widget> [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(50,50,50,0.6),//Color.fromRGBO(100,0,150,1),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            //SizedBox(width: 30),
+                            Text(
+                              currentProfile.name,
+                              style: GoogleFonts.lato(
+                                fontSize: 24,
+                                color: Colors.white,
+                              ),
+                            ),
+                            //SizedBox(width: 190),
+                            Text(
+                              'Age: ' + currentProfile.age,
+                              style: GoogleFonts.lato(
+                                fontSize: 24,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 550,
+                      color: Colors.black,
+                      child: Center(
+                        child: SizedBox(
+                          height: cardHeight,
+                          width: cardWidth,
+                          child: PageView(
+                            controller: _controller,
+                            scrollDirection: Axis.horizontal,
+                            children:[
+                              for(int i = 0; i < currentProfile.cards.length; i++) //This creates a physical card for ever item in the cards list
+                                enumToWidget( //this is where we pass in all of the data for all of the cards
+                                  currentProfile.cards[i],
+                                  channelId: currentProfile.ytChannelId,
+                                  bioTitle: currentProfile.bioTitle,
+                                  bioBody: currentProfile.bioBody,
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height:50,
+                      color: Colors.grey[900],//Color.fromRGBO(100,0,150,1),
+                      child: Center(
+                        child: Text(
+                          currentProfile.location != [] ? currentProfile.location[0] : '',
+                          style: GoogleFonts.lato(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              );
+            },
+              childCount: 1,
             ),
-          );
-        }
-        else if(snapshot.hasError){
-          print(snapshot.error);
-          return Center(
-            child: Text(
-                'Something went wrong ):',
-              style: GoogleFonts.lato(fontSize: 28, color: Colors.grey[500]),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Checklist extends StatefulWidget {
+  @override
+  _ChecklistState createState() => _ChecklistState();
+}
+
+class _ChecklistState extends State<Checklist> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children:[
+          Text(
+            'Welcome!',
+            style: GoogleFonts.lato(
+              fontSize: 40,
+              color: Colors.white,
             ),
-          );
-        }
-        else{
-          return Loading();
-        }
-      }
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Before you get started, we just need a little more information!',
+            style: GoogleFonts.lato(
+              fontSize: 24,
+              color: Colors.grey[500],
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 10),
+          Container(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.grey[800],
+              ),
+              padding: EdgeInsets.all(12),
+              margin: EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  for(int i = 0; i < Swipe.of(context).checkList.values.length; i++ )
+                    if (Swipe.of(context).checkList.values.toList()[i] == false)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        child: Card(
+                          color: Colors.grey[850],
+                          child: ListTile(
+                            onTap: () async{
+                              if(Swipe.of(context).checkList.keys.toList()[i] == 'hasCards') await Navigator.pushNamed(context, '/card-manager');
+                              else await Navigator.pushNamed(context, '/user-info');
+                              setState(() {});
+                            },
+                            leading: Icon(Icons.check_box_outline_blank),
+                            title: Text(
+                                      Swipe.of(context).checkListText[Swipe.of(context).checkList.keys.toList()[i]],
+                                      style: GoogleFonts.lato(
+                                        fontSize: 22,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                            trailing: Icon(Icons.arrow_forward_ios),
+                          ),
+                        ),
+                        // child: Row(
+                        //   children: [
+                        //     Icon(Icons.check_box_outline_blank),
+                        //     Container(
+                        //       padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
+                        //       child: Text(
+                        //         Swipe.of(context).checkListText[Swipe.of(context).checkList.keys.toList()[i]],
+                        //         style: GoogleFonts.lato(
+                        //           fontSize: 22,
+                        //           color: Colors.white,
+                        //         ),
+                        //       )
+                        //     ),
+                        //   ],
+                        // ),
+                      ),
+                  SizedBox(height: 6),
+                  LinearProgressIndicator(
+                    value: Swipe.of(context).checkListItemsCompletedOverall.toDouble() / 3,
+                    backgroundColor: Colors.grey[900],
+                    minHeight: 10,
+                  ),
+                  if(Swipe.of(context).checkListItemsCompletedOverall == 2)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                      child: Text(
+                        'Almost there!',
+                        style: GoogleFonts.lato(fontSize: 18, color: Colors.white),
+                      ),
+                    ),
+                ],
+              ),
+            )
+          ),
+        ],
+      ),
     );
   }
 }

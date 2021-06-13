@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gamers_and_content_creators/models/user.dart';
+import 'package:gamers_and_content_creators/services/database.dart';
 import 'package:gamers_and_content_creators/services/user_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,9 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+
     UserModel user = Provider.of<UserModel>(context);
+
     return Form(
       key: _formKey,
         child:Column(
@@ -111,6 +114,9 @@ class _SettingsState extends State<Settings> {
               onPressed: () async{
                 await UserPreferences.setMaxRadius(_rad);
                 await setAgeRange(_ageRange.start, _ageRange.end);
+                await DatabaseService(uid: user.uid).updateUserData(
+                    radius: _rad.toInt(),
+                );
                 //update database eventually
                 Navigator.pop(context);
               },

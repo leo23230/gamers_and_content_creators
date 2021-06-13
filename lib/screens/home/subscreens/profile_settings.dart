@@ -3,6 +3,7 @@ import 'package:gamers_and_content_creators/screens/home/cards/youtube_card.dart
 import 'package:gamers_and_content_creators/screens/home/subscreens/settings.dart';
 import 'package:gamers_and_content_creators/screens/home/subscreens/user_data_form.dart';
 import 'package:gamers_and_content_creators/services/upload.dart';
+import 'package:gamers_and_content_creators/shared/blank_profile_picture.dart';
 import 'package:gamers_and_content_creators/shared/card_enum.dart';
 import 'package:gamers_and_content_creators/shared/loading.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -52,22 +53,6 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       );
       this.setState((){_selectedImage = croppedImage;});
     }
-  }
-
-  Widget blankProfilePicture(){
-    return Container(
-      width: 180,
-      height: 180,
-      decoration: BoxDecoration(
-        border: Border.all(width: 4, color: Colors.white),
-        borderRadius: BorderRadius.all(Radius.circular(90)),
-      ),
-      child: Icon(
-        Icons.person,
-        color: Colors.white,
-        size: 120,
-      ),
-    );
   }
 
   ImageProvider getBackgroundImage(String existingBackgroundImagePath){
@@ -146,7 +131,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                     background: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        if(userData.profileImagePath == '')blankProfilePicture()
+                        if(userData.profileImagePath == '') BlankProfilePicture()
                         else Container(
                           width: 180,
                           height: 180,

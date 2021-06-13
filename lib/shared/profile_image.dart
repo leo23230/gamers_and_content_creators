@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class ProfileImage extends StatelessWidget {
   final url;
-  ProfileImage({this.url});
+  final borderWidth;
+  ProfileImage({this.url, this.borderWidth});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class ProfileImage extends StatelessWidget {
           image: NetworkImage(this.url),
           fit: BoxFit.cover,
         ),
-        border: Border.all(width: 4, color: Colors.white),
+        border: Border.all(width: (borderWidth!=null) ? borderWidth : 4, color: Colors.white),
         borderRadius: BorderRadius.all(Radius.circular(100)),
       ),
     );

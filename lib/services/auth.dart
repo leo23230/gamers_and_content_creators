@@ -52,8 +52,9 @@ class AuthService {
 
       //create a new document for the user with their unique uid
       await DatabaseService(uid: user.uid).updateUserData(userId: user.uid, name: name,age: age,location: location,month: month,day: day,year: year,
-          profileImagePath: '', backgroundImagePath: '', cards: ["Youtube Card","Twitch Card", "Bio Card"], ytChannelId: '', bioTitle: '', bioBody:'');//some are blank because not part of the sign up flow
-      UserPreferences.setMaxRadius(40);
+          profileImagePath: '', backgroundImagePath: '', radius: 50, ageMin: 18, ageMax: 24,
+          cards: [], ytChannelId: '', bioTitle: '', bioBody:'');//some are blank because not part of the sign up flow
+      await UserPreferences.setMaxRadius(40);
       return _userFromFirebaseUser(user);
     } catch (error) {
       print(error.toString());

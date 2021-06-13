@@ -9,7 +9,12 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 class DatabaseService {
 
   final String uid;
-  DatabaseService({this.uid});
+  final double lat;
+  final double lng;
+  final int rad;
+  final int minAge;
+  final int maxAge;
+  DatabaseService({this.uid, this.lat, this.lng, this.rad, this.minAge, this.maxAge});
 
   // collection reference
   // a reference to a collection in the Firestore database
@@ -20,7 +25,7 @@ class DatabaseService {
 
   //Used both to initialize the user data doc and update the existing doc with new data
   Future updateUserData({String userId, String name, String age, List<dynamic> location, dynamic geoHash,
-    int month, int day, int year, String profileImagePath, String backgroundImagePath,
+    int month, int day, int year, String profileImagePath, String backgroundImagePath, int radius, int ageMin, int ageMax,
     List <dynamic> cards, String ytChannelId, String bioTitle, String bioBody,
     List<dynamic> liked, List<dynamic> passed, List<dynamic> matches,}) async {
     return await profilesCollection.doc(uid).set({
@@ -36,6 +41,9 @@ class DatabaseService {
       if(year != null) 'year': year,
       if(profileImagePath != null) 'profileImagePath': profileImagePath,
       if(backgroundImagePath != null) 'backgroundImagePath': backgroundImagePath,
+      if(radius != null) 'radius' : radius,
+      if(ageMin != null) 'ageMin' : ageMin,
+      if(ageMax != null) 'ageMax' : ageMax,
       if(cards != null) 'cards': cards,
       if(ytChannelId != null) 'ytChannelId': ytChannelId,
       if(bioTitle != null)'bioTitle' : bioTitle,
@@ -69,6 +77,9 @@ class DatabaseService {
         year: doc.data()['year'] ?? 0,
         profileImagePath: doc.data()['profileImagePath'] ?? '',
         backgroundImagePath: doc.data()['backgroundImagePath'] ?? '',
+        radius: doc.data()['radius'] ?? 0.0,
+        minAge: doc.data()['minAge'] ?? 0,
+        maxAge: doc.data()['maxAge'] ?? 0,
         cards: doc.data()['cards'] ?? [''],
         ytChannelId: doc.data()['ytChannelId'] ?? '',
         bioTitle: doc.data()['bioTitle'] ?? '',
@@ -95,6 +106,9 @@ class DatabaseService {
       year: snapshot.data()['year'],
       profileImagePath: snapshot.data()['profileImagePath'],
       backgroundImagePath: snapshot.data()['backgroundImagePath'],
+      radius: snapshot.data()['radius'],
+      minAge: snapshot.data()['minAge'],
+      maxAge: snapshot.data()['maxAge'],
       cards: snapshot.data()['cards'],
       ytChannelId: snapshot.data()['ytChannelId'],
       bioTitle: snapshot.data()['bioTitle'],
@@ -136,5 +150,17 @@ class DatabaseService {
   //stream that gets a profile snapshot from the uid and returns a UserData object
   Stream<UserData> get userData {
     return profilesCollection.doc(uid).snapshots().map(_userDataFromSnapshot); //every time the doc changes we get a snapshot
+  }
+
+  Stream<List<Profile>> get profilesList {
+    GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
+    return geo.collection(collectionRef: profilesCollection)
+      .within(
+        center: center,
+        radius: rad.toDouble(),
+        field: 'geoHash',
+        strictMode: true,
+      )
+      .map(_profileListFromSnapshot);
   }
 }

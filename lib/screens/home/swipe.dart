@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gamers_and_content_creators/models/profile.dart';
 import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:gamers_and_content_creators/screens/home/cards/youtube_card.dart';
+import 'package:gamers_and_content_creators/screens/home/subscreens/user_data_form.dart';
 import 'package:gamers_and_content_creators/services/database.dart';
 import 'package:gamers_and_content_creators/services/messaging_service.dart';
 import 'package:gamers_and_content_creators/shared/card_enum.dart';
@@ -53,6 +54,10 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
 
     if(checkListItemsCompleted == checkList.length) return true;
     else return false;
+  }
+
+  void updateWidget(){
+    setState(() {});
   }
 
   @override
@@ -499,9 +504,17 @@ class _ChecklistState extends State<Checklist> {
                           color: Colors.grey[850],
                           child: ListTile(
                             onTap: () async{
-                              if(Swipe.of(context).checkList.keys.toList()[i] == 'hasCards') await Navigator.pushNamed(context, '/card-manager');
-                              else await Navigator.pushNamed(context, '/user-info');
-                              setState(() {});
+                              var value;
+                              if(Swipe.of(context).checkList.keys.toList()[i] == 'hasCards'){
+                                value = await Navigator.pushNamed(context, '/card-manager');
+                              }
+                              else{
+                                value = await Navigator.pushNamed(context, '/user-info');
+                              }
+                              setState(() {
+                                print('back');
+                                Swipe.of(context).updateWidget();
+                              });
                             },
                             leading: Icon(Icons.check_box_outline_blank),
                             title: Text(

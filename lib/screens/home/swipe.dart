@@ -199,11 +199,11 @@ class _SwipeWidgetState extends State<SwipeWidget> {
     print(currentProfile.liked);
     print(currentProfile.matches);
 
-    List<dynamic> myMatches = userData.matches;
-    List<dynamic> myLiked = userData.liked;
+    List<dynamic> myMatches = (userData.matches != null) ? userData.matches : List<dynamic>();
+    List<dynamic> myLiked = (userData.liked != null) ? userData.liked : List<dynamic>();
 
-    List<dynamic> otherMatches = currentProfile.matches;
-    List<dynamic> otherLikes = currentProfile.liked;
+    List<dynamic> otherMatches = (currentProfile.matches != null) ? currentProfile.matches : List<dynamic>();
+    List<dynamic> otherLikes = (currentProfile.liked != null) ?currentProfile.liked : List<dynamic>();
 
     bool match;
 

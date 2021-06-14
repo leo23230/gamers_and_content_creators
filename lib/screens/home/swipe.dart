@@ -71,7 +71,7 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
 
     if(userData.profileImagePath != "") hasProfilePicture = true;
     else hasProfilePicture = false;
-    if(userData.location[0] != "none") hasLocation = true;
+    if(userData.location[0] != "") hasLocation = true;
     else hasLocation = false;
     if(userData.cards.length > 1) hasCards = true;
     else hasCards = false;
@@ -514,29 +514,14 @@ class _ChecklistState extends State<Checklist> {
                             trailing: Icon(Icons.arrow_forward_ios),
                           ),
                         ),
-                        // child: Row(
-                        //   children: [
-                        //     Icon(Icons.check_box_outline_blank),
-                        //     Container(
-                        //       padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
-                        //       child: Text(
-                        //         Swipe.of(context).checkListText[Swipe.of(context).checkList.keys.toList()[i]],
-                        //         style: GoogleFonts.lato(
-                        //           fontSize: 22,
-                        //           color: Colors.white,
-                        //         ),
-                        //       )
-                        //     ),
-                        //   ],
-                        // ),
                       ),
                   SizedBox(height: 6),
                   LinearProgressIndicator(
-                    value: Swipe.of(context).checkListItemsCompletedOverall.toDouble() / 3,
+                    value: Swipe.of(context).checkListItemsCompletedOverall.toDouble() / Swipe.of(context).checkList.length,
                     backgroundColor: Colors.grey[900],
                     minHeight: 10,
                   ),
-                  if(Swipe.of(context).checkListItemsCompletedOverall == 2)
+                  if(Swipe.of(context).checkListItemsCompletedOverall == Swipe.of(context).checkList.length - 1)
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
                       child: Text(

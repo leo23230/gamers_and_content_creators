@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamers_and_content_creators/shared/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BioCard extends StatefulWidget {
@@ -32,7 +33,7 @@ class _BioCardState extends State<BioCard> {
           ],
         ),
         border: Border.all(color: Colors.white, width: 4),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(cardRoundness),
       ),
       child: Column(
         children: [
@@ -54,7 +55,7 @@ class _BioCardState extends State<BioCard> {
               decoration: BoxDecoration(
                 color: Color.fromRGBO(0, 0, 0, 0.4),
                 border: Border.all(color: Colors.white, width: 2),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(cardRoundness),
               ),
               child: Padding(
                 padding: EdgeInsets.all(10),

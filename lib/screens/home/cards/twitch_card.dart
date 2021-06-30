@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamers_and_content_creators/shared/constants.dart';
 
 class TwitchCard extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class _TwitchCardState extends State<TwitchCard> {
       width: cardWidth,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white, width: 4),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(cardRoundness),
         color: Color.fromRGBO(50, 0, 80, 1),
       ),
       child: Column(

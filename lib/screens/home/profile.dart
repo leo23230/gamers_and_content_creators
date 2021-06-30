@@ -23,9 +23,10 @@ class _ProfileState extends State<Profile> {
       showModalBottomSheet(context: context, builder: (context) {
         return Container(
           decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.white,
-              width: 2,
+            border: Border(
+              top: BorderSide(width: 2.0, color: Colors.white),
+              left: BorderSide(width: 2.0, color: Colors.white),
+              right: BorderSide(width: 2.0, color: Colors.white),
             ),
             color: Colors.black,
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gamers_and_content_creators/models/channel_model.dart';
 import 'package:gamers_and_content_creators/screens/home/subscreens/video_screen.dart';
 import 'package:gamers_and_content_creators/services/api_service.dart';
+import 'package:gamers_and_content_creators/shared/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -51,7 +52,7 @@ class _YoutubeCardState extends State<YoutubeCard> {
         decoration: BoxDecoration(
           color: Color.fromRGBO(50, 50, 50, 0.8),
           border: Border.all(color: Colors.white, width: 2),
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         child: Row(
           children: [
@@ -99,12 +100,12 @@ class _YoutubeCardState extends State<YoutubeCard> {
       ),
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-        padding: EdgeInsets.all(10.0),
-        height: 140.0,
+        padding: EdgeInsets.all(10),
+        height: 130.0,
         decoration: BoxDecoration(
           color: Color.fromRGBO(50, 50, 50, 0.8),
           border: Border.all(color: Colors.white, width: 2),
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         child: Row(
           children: <Widget>[
@@ -146,7 +147,7 @@ class _YoutubeCardState extends State<YoutubeCard> {
       width: cardWidth,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white, width: 4),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(cardRoundness),
         color: Color.fromRGBO(70, 0, 0, 1),
       ),
       child: Column( // YOUTUBE CARD

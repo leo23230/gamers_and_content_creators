@@ -52,7 +52,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home> {
                 color: Colors.white,
               )
           ),
-          backgroundColor: Colors.pink[500],
+          backgroundColor: Colors.pink[500], //Color(0xffFB4F47),
           elevation: 0.0,
           actions: <Widget>[
             FlatButton.icon(
@@ -85,7 +85,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
-          selectedItemColor: Colors.orange[400],
+          selectedItemColor: Color(0xfffba220),
           unselectedItemColor: Colors.grey[600],
           backgroundColor: Colors.grey[900],
           selectedFontSize: 15,
@@ -121,3 +121,4 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home> {
     );
   }
 }
+//

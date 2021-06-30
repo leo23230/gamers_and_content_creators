@@ -22,7 +22,7 @@ class _AuthenticateButtonsState extends State<AuthenticateButtons> {
     return Container(
       child: Column(
         children: [
-          SizedBox(height: 30),
+          SizedBox(height: 20),
           SizedBox(
             width: 200.0,
             height: 50.0,

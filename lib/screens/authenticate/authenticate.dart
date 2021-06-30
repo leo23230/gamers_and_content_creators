@@ -21,7 +21,7 @@ class _AuthenticateState extends State<Authenticate> {
         decoration:BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              'assets/binxy bg.jpg',
+              'assets/Twine BG.jpg',
             ),
             colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.7), BlendMode.dstATop),
             fit: BoxFit.fitWidth,
@@ -33,20 +33,23 @@ class _AuthenticateState extends State<Authenticate> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Duwō',
-              style: GoogleFonts.montserrat(
-                fontSize: 96.0,
-                color: Colors.white,
-              ),
+            Image.asset(
+              'assets/Twine Logo v1.png',
             ),
-            Text(
-                'Content creators connect',
-                style: GoogleFonts.montserrat(
-                  fontSize: 24.0,
-                  color: Colors.white,
-                )
-            ),
+            // Text(
+            //   'Duwō',
+            //   style: GoogleFonts.montserrat(
+            //     fontSize: 96.0,
+            //     color: Colors.white,
+            //   ),
+            // ),
+            // Text(
+            //     'Content creators connect',
+            //     style: GoogleFonts.montserrat(
+            //       fontSize: 24.0,
+            //       color: Colors.white,
+            //     )
+            // ),
             ContentManager(),
           ],
         ),

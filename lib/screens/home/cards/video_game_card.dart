@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamers_and_content_creators/shared/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FavoriteVideoGamesCard extends StatefulWidget {
@@ -27,7 +28,7 @@ class _FavoriteVideoGamesCardState extends State<FavoriteVideoGamesCard> {
           ],
         ),
         border: Border.all(color: Colors.white, width: 4),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(cardRoundness),
       ),
       child: Column(
         children: [
@@ -46,7 +47,7 @@ class _FavoriteVideoGamesCardState extends State<FavoriteVideoGamesCard> {
               decoration: BoxDecoration(
                 color: Color.fromRGBO(0, 0, 0, 0.4),
                 border: Border.all(color: Colors.white, width: 2),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(cardRoundness),
               ),
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20,10,20,0),
@@ -64,7 +65,7 @@ class _FavoriteVideoGamesCardState extends State<FavoriteVideoGamesCard> {
                           Container(
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.white, width: 2),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(cardRoundness),
                               image: DecorationImage(
                                 image: AssetImage(game),
                                 fit: BoxFit.cover,
@@ -76,7 +77,7 @@ class _FavoriteVideoGamesCardState extends State<FavoriteVideoGamesCard> {
                             child: Container(
                               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(cardRoundness),
                                 color: Color.fromRGBO(0, 0, 0, 0.5),
                               ),
                               child: Text(

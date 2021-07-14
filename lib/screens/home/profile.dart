@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamers_and_content_creators/services/auth.dart';
 import 'package:gamers_and_content_creators/shared/blank_profile_picture.dart';
 import 'package:gamers_and_content_creators/shared/profile_image.dart';
 import 'subscreens/settings.dart';
@@ -16,6 +17,9 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
+  final AuthService _auth = AuthService();
+
   @override
   Widget build(BuildContext context) {
     UserData userData = Provider.of<UserData>(context);
@@ -133,8 +137,36 @@ class _ProfileState extends State<Profile> {
             ),
           ),
 
-
-
+          Card(
+            color: Colors.grey[850],
+            child: ListTile(
+              leading: Icon(
+                Icons.logout,
+                size:50.0,
+              ),
+              title: Text(
+                'Logout',
+                style: GoogleFonts.lato(
+                  fontSize: 20,
+                  color: Colors.grey[200],
+                ),
+              ),
+              subtitle: Text(
+                'Click here to log out of this account',
+                style: GoogleFonts.lato(
+                  fontSize: 16,
+                  color: Colors.grey[500],
+                ),
+              ),
+              onTap: (() async{await _auth.signOut();}),
+            ),
+          ),
+          Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Image.asset("assets/Twine Logo v1.png"),
+              )
+          ),
       ],
     );
   }

@@ -50,6 +50,9 @@ dependencies:
   geoflutterfire: ^2.2.1
   shared_preferences: ^0.5.12+4
   intl: ^0.16.1
+  assets_audio_player: ^2.0.10
+  audioplayers: ^0.16.2
+  flutter_linkify: ^4.0.0
 
 
 

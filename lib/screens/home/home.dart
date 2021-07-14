@@ -44,78 +44,86 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home> {
       value: DatabaseService(uid: user.uid).userData,
       child:  Scaffold(
         backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: Text(
-              tabs[_currentIndex],
-              style: GoogleFonts.lato(
-                fontSize: 24,
-                color: Colors.white,
-              )
+        // appBar: AppBar(
+        //   title: Text(
+        //       tabs[_currentIndex],
+        //       style: GoogleFonts.lato(
+        //         fontSize: 24,
+        //         color: Colors.white,
+        //       )
+        //   ),
+        //   backgroundColor: Colors.pink[500], //Color(0xffFB4F47),
+        //   elevation: 0.0,
+        //   actions: <Widget>[
+        //     FlatButton.icon(
+        //       icon: Icon(Icons.person, size: 24),
+        //       label: Text(
+        //         'logout',
+        //         style: GoogleFonts.lato(
+        //           fontSize: 18,
+        //           color: Colors.grey[900],
+        //         ),
+        //       ),
+        //       onPressed: () async {
+        //         await _auth.signOut();
+        //       },
+        //     ),
+        //   ],
+        // ),
+        body: SafeArea(
+          child: PageView(
+            controller: _controller,
+            children:[
+              Profile(),
+              Swipe(),
+              Matches()
+            ],
+            onPageChanged: (index){
+              setState((){
+                _currentIndex = index;
+              });
+            },
           ),
-          backgroundColor: Colors.pink[500], //Color(0xffFB4F47),
-          elevation: 0.0,
-          actions: <Widget>[
-            FlatButton.icon(
-              icon: Icon(Icons.person, size: 24),
-              label: Text(
-                'logout',
-                style: GoogleFonts.lato(
-                  fontSize: 18,
-                  color: Colors.grey[900],
-                ),
+        ),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(top: BorderSide(color: Colors.white, width: 0.25)),
+          ),
+          child: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            selectedItemColor: Color(0xfffba220),
+            unselectedItemColor: Colors.grey[600],
+            backgroundColor: Colors.black,
+            selectedFontSize: 15,
+            unselectedFontSize: 12,
+            selectedIconTheme: IconThemeData(
+              size: 26,
+            ),
+            unselectedIconTheme: IconThemeData(
+              size: 18,
+            ),
+            onTap: (index) {
+              setState((){
+                _currentIndex = index;
+                _controller.animateToPage(_currentIndex, duration: Duration(milliseconds: 200), curve: Curves.linear);
+              });
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                title: Text('Profile'),
               ),
-              onPressed: () async {
-                await _auth.signOut();
-              },
-            ),
-          ],
-        ),
-        body: PageView(
-          controller: _controller,
-          children:[
-            Profile(),
-            Swipe(),
-            Matches()
-          ],
-          onPageChanged: (index){
-            setState((){
-              _currentIndex = index;
-            });
-          },
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          selectedItemColor: Color(0xfffba220),
-          unselectedItemColor: Colors.grey[600],
-          backgroundColor: Colors.grey[900],
-          selectedFontSize: 15,
-          unselectedFontSize: 12,
-          selectedIconTheme: IconThemeData(
-            size: 28,
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                title: Text('Home'),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.forum),
+                title: Text('Threads'),
+              ),
+            ],
           ),
-          unselectedIconTheme: IconThemeData(
-            size: 20,
-          ),
-          onTap: (index) {
-            setState((){
-              _currentIndex = index;
-              _controller.animateToPage(_currentIndex, duration: Duration(milliseconds: 200), curve: Curves.linear);
-            });
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              title: Text('Profile'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              title: Text('Home'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.forum),
-              title: Text('Matches'),
-            ),
-          ],
         ),
       ),
     );

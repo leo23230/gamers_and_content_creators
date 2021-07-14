@@ -8,7 +8,8 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="gamers_and_content_creators"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBtsqYzSW4W__FAdmUZ9Cj9EVIoravGAlo"/>
         <activity

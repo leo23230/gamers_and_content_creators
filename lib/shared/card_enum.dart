@@ -1,5 +1,6 @@
 import 'package:gamers_and_content_creators/screens/home/cards/anime_card.dart';
 import 'package:gamers_and_content_creators/screens/home/cards/bio_card.dart';
+import 'package:gamers_and_content_creators/screens/home/cards/soundcloud_card.dart';
 import 'package:gamers_and_content_creators/screens/home/cards/twitch_card.dart';
 import 'package:gamers_and_content_creators/screens/home/cards/video_game_card.dart';
 import 'package:gamers_and_content_creators/screens/home/cards/youtube_card.dart';
@@ -11,7 +12,8 @@ enum DuwoCard{
   twitch,
   bio,
   favoriteGames,
-  favoriteAnime
+  favoriteAnime,
+  soundCloud,
 }
 
 Widget enumToWidget(String card, {String channelId, String bioTitle, String bioBody} ){
@@ -30,6 +32,9 @@ Widget enumToWidget(String card, {String channelId, String bioTitle, String bioB
       break;
     case 'Anime Card':
       return AnimeCard();
+      break;
+    case 'Soundcloud Card':
+      return SoundcloudCard();
       break;
   }
 }
@@ -54,6 +59,9 @@ Widget stringToPreview(String card){
     case 'Astrology':
       return AstrologyPreviewCard();
       break;
+    case 'Soundcloud Card':
+      return SoundcloudPreviewCard();
+      break;
   }
 }
-final List<dynamic> allCards = ['Youtube Card', 'Twitch Card', 'Bio Card', 'Video Game Card', 'Anime Card', 'Astrology'];
+final List<dynamic> allCards = ['Youtube Card', 'Twitch Card', 'Bio Card', 'Video Game Card', 'Anime Card', 'Astrology', 'Soundcloud Card'];

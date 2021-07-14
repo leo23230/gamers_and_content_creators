@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gamers_and_content_creators/models/profile.dart';
 import 'package:gamers_and_content_creators/models/user.dart';
@@ -17,6 +19,7 @@ import 'package:gamers_and_content_creators/services/api_service.dart';
 import 'package:gamers_and_content_creators/screens/home/subscreens/video_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:math' as math;
 class Swipe extends StatefulWidget {
   @override
   _SwipeState createState() => _SwipeState();
@@ -86,7 +89,7 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
     super.build(context);
 
     if(checkListCompletion()){
-      return (userData!= null) ? StreamProvider.value(
+      return StreamProvider.value(
         value: DatabaseService(
           uid: user.uid,
           lat: userData.location[1],
@@ -94,7 +97,7 @@ class _SwipeState extends State<Swipe> with AutomaticKeepAliveClientMixin<Swipe>
           rad: userData.radius,
         ).profilesList,
         child: SwipeWidget(),
-      ) : Loading();
+      );
     }
     else{
       return Checklist();
@@ -287,173 +290,241 @@ class _SwipeWidgetState extends State<SwipeWidget> {
     UserModel user = Provider.of<UserModel>(context);
     UserData userData = Provider.of<UserData>(context);
     currentProfileBatch = Provider.of<List<Profile>>(context);
-    currentProfile = currentProfileBatch[profileCounter];
+    if(currentProfileBatch != null)currentProfile = currentProfileBatch[profileCounter];
 
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          alignment: Alignment.topCenter,
-          image: getBackgroundImage(currentProfile.backgroundImagePath),
-          colorFilter:
-          ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
-        ),
-      ),
-      child: CustomScrollView(
-        slivers: <Widget> [
-          SliverAppBar(
-            expandedHeight: 260.0,
-            backgroundColor: Color.fromRGBO(0, 0, 0, 0),
-            pinned: false,
-            floating: false,
-            toolbarHeight: 0,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Opacity(
-                  opacity: opacity,
-                  child: FlatButton(
-                    onPressed: (){
-                      setState((){});
-                    },
-                    child: (currentProfile.profileImagePath == '') ? blankProfilePicture() :
-                    Container(
-                      width: 180,
-                      height: 180,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(currentProfile.profileImagePath),
-                          fit: BoxFit.cover,
-                        ),
-                        border: Border.all(width: 4, color: Colors.white),
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
-                      ),
-                    ),
-                  )
-              ),
-              title: ButtonBar(
-                alignment: MainAxisAlignment.spaceBetween,
-                children:[
-                  SizedBox(
-                    width:50,
-                    height:50,
-                    child: FloatingActionButton(
-                      heroTag: "pass",
-                      onPressed: () {
-                        if(profileCounter < currentProfileBatch.length -1){
-                          profileCounter += 1;
-                          setState((){});
-                          currentProfile = currentProfileBatch[profileCounter];
-                          //_initChannel();
-                        }
-                        else{
-                          profileCounter = 0;
-                          setState((){});
-                          currentProfile = currentProfileBatch[profileCounter];
-                          //_initChannel();
-                        }
-                      },
-                      child: Icon(Icons.remove),
-                      backgroundColor: Colors.pink[500],
-                    ),
-                  ),
-                  //SizedBox(width:50),
-                  SizedBox(
-                    width:50,
-                    height:50,
-                    child: FloatingActionButton(
-                      heroTag: "like",
-                      onPressed: () async{
-                        //figures out which list to put the liked user in based on two scenarios
-                        await like(currentProfile, userData, user.uid);
-                      },
-                      child: Icon(Icons.people),
-                      backgroundColor: Colors.pink[500],
-                    ),
-                  ),
-                ],
-              ),
-              titlePadding: EdgeInsets.all(20),
-            ),
+    if(currentProfileBatch != null && currentProfile.profileImagePath != null){
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            alignment: Alignment.topCenter,
+            //fit: BoxFit.fill,
+            image: getBackgroundImage(currentProfile.backgroundImagePath),
+            // colorFilter:
+            // ColorFilter.mode(Colors.black.withOpacity(.7), BlendMode.dstATop),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate((BuildContext context, int index){
-              return Container(
-                child: Column(
-                  children:<Widget> [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(50,50,50,0.6),//Color.fromRGBO(100,0,150,1),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            //SizedBox(width: 30),
-                            Text(
-                              currentProfile.name,
-                              style: GoogleFonts.lato(
-                                fontSize: 24,
-                                color: Colors.white,
+          //color: Colors.pink[900],
+        ),
+        child: CustomScrollView(
+          slivers: <Widget> [
+            SliverAppBar(
+              expandedHeight: 170.0,
+              backgroundColor: Color.fromRGBO(255, 255,255, 0.0),
+              pinned: false,
+              floating: false,
+              toolbarHeight: 0,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Opacity(
+                    opacity: opacity,
+                    child: FlatButton(
+                      onPressed: (){
+                        setState((){
+                          if(opacity == 1) opacity = 0;
+                          else opacity = 1;
+                        });
+                      },
+                      child: (currentProfile.profileImagePath == '') ? blankProfilePicture() :
+                      Stack( //username and profile
+                        overflow: Overflow.visible,
+                        alignment: Alignment.center,
+                        children: [
+                          Positioned(
+                            left: 100,
+                            child: Container(
+                              padding: EdgeInsets.fromLTRB(28, 0, 0, 0),
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(0, 0, 0, 0.8),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(width: 2.0, color: Colors.pink[500]),
                               ),
-                            ),
-                            //SizedBox(width: 190),
-                            Text(
-                              'Age: ' + currentProfile.age,
-                              style: GoogleFonts.lato(
-                                fontSize: 24,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 550,
-                      color: Colors.black,
-                      child: Center(
-                        child: SizedBox(
-                          height: cardHeight,
-                          width: cardWidth,
-                          child: PageView(
-                            controller: _controller,
-                            scrollDirection: Axis.horizontal,
-                            children:[
-                              for(int i = 0; i < currentProfile.cards.length; i++) //This creates a physical card for ever item in the cards list
-                                enumToWidget( //this is where we pass in all of the data for all of the cards
-                                  currentProfile.cards[i],
-                                  channelId: currentProfile.ytChannelId,
-                                  bioTitle: currentProfile.bioTitle,
-                                  bioBody: currentProfile.bioBody,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'LongUserName',
+                                      style: GoogleFonts.lato(fontSize: 28,  color: Colors.white),
+                                    ),
+                                    Text(
+                                      '@USERNAME123',
+                                      style: GoogleFonts.lato(fontSize: 16,  color: Colors.grey[400]),
+                                    ),
+                                  ],
                                 ),
-                            ],
+                              ),
+                            ),
                           ),
-                        ),
+                          Positioned(
+                            left: -10,
+                            child: Container(
+                              width: 140,
+                              height: 140,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(currentProfile.profileImagePath),
+                                  fit: BoxFit.cover,
+                                ),
+                                border: Border.all(width: 4, color: Colors.pink[500]),
+                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                ),
+                // title:
+                // titlePadding: EdgeInsets.all(20),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate((BuildContext context, int index){
+                return Stack(
+                  children: [
+                    Container(
+                      child: Column(
+                        children:<Widget> [
+                          Container(
+                            height: 550,
+                            //width: 400,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                topRight: Radius.circular(15),
+                              ),
+                              color: Colors.black,
+                            ),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      //SizedBox(width: 30),
+                                      Text(
+                                        currentProfile.name,
+                                        style: GoogleFonts.lato(
+                                          fontSize: 24,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      //SizedBox(width: 190),
+                                      Text(
+                                        'Age: ' + currentProfile.age,
+                                        style: GoogleFonts.lato(
+                                          fontSize: 24,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Center(
+                                  child: SizedBox(
+                                    height: cardHeight,
+                                    width: cardWidth,
+                                    child: PageView(
+                                      controller: _controller,
+                                      scrollDirection: Axis.horizontal,
+                                      children:[
+                                        for(int i = 0; i < currentProfile.cards.length; i++) //This creates a physical card for ever item in the cards list
+                                          enumToWidget( //this is where we pass in all of the data for all of the cards
+                                            currentProfile.cards[i],
+                                            channelId: currentProfile.ytChannelId,
+                                            bioTitle: currentProfile.bioTitle,
+                                            bioBody: currentProfile.bioBody,
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height:50,
+                            color: Colors.black,
+                            child: Center(
+                              child: Text(
+                                currentProfile.location != [] ? currentProfile.location[0] : '',
+                                style: GoogleFonts.lato(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Container(
-                      height:50,
-                      color: Colors.grey[900],//Color.fromRGBO(100,0,150,1),
-                      child: Center(
-                        child: Text(
-                          currentProfile.location != [] ? currentProfile.location[0] : '',
-                          style: GoogleFonts.lato(
-                            fontSize: 20,
-                            color: Colors.white,
+
+                    Positioned(
+                      bottom: 60,
+                      right: -270,
+                      left: -270,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children:[
+                          SizedBox(
+                            width:70,
+                            height:70,
+                            child: FloatingActionButton(
+                              heroTag: "pass",
+                              onPressed: () {
+                                if(profileCounter < currentProfileBatch.length -1){
+                                  profileCounter += 1;
+                                  setState((){});
+                                  currentProfile = currentProfileBatch[profileCounter];
+                                  //_initChannel();
+                                }
+                                else{
+                                  profileCounter = 0;
+                                  setState((){});
+                                  currentProfile = currentProfileBatch[profileCounter];
+                                  //_initChannel();
+                                }
+                              },
+                              child:Transform(
+                                alignment: Alignment.center,
+                                transform: Matrix4.rotationY(0),
+                                child: Icon(Icons.person_remove_alt_1_outlined, color: Colors.white, size: 28),
+                              ),
+                              backgroundColor: Colors.pink[500],
+                            ),
                           ),
-                          textAlign: TextAlign.center,
-                        ),
+                          //SizedBox(width:50),
+                          SizedBox(
+                            width:70,
+                            height:70,
+                            child: FloatingActionButton(
+                              heroTag: "like",
+                              onPressed: () async{
+                                //figures out which list to put the liked user in based on two scenarios
+                                await like(currentProfile, userData, user.uid);
+                              },
+                              child: Icon(Icons.group_add_outlined, color: Colors.white, size: 32),
+                              backgroundColor: Colors.pink[500],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
-                ),
-              );
-            },
-              childCount: 1,
+                );
+              },
+                childCount: 1,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
+    else{
+      return Loading();
+    }
   }
 }
 

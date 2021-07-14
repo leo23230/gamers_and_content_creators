@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:gamers_and_content_creators/shared/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BioCard extends StatefulWidget {
 
@@ -59,18 +61,32 @@ class _BioCardState extends State<BioCard> {
               ),
               child: Padding(
                 padding: EdgeInsets.all(10),
-                child: Text(
-                  (widget.bioBody != null) ? widget.bioBody :'No bio',
-                  style: GoogleFonts.lato(
-                    fontSize: 20,
-                    color: (widget.bioBody != null) ? Colors.white : Colors.grey,
-                  ),
+                child: Linkify(
+                    onOpen: _onOpen,
+                    text: (widget.bioBody != null) ? widget.bioBody :'No bio',
+                    style: GoogleFonts.lato(
+                      fontSize: 20,
+                      color: (widget.bioBody != null) ? Colors.white : Colors.grey,
+                    )
                 ),
+                //   (widget.bioBody != null) ? widget.bioBody :'No bio',
+                //   style: GoogleFonts.lato(
+                //     fontSize: 20,
+                //     color: (widget.bioBody != null) ? Colors.white : Colors.grey,
+                //   ),
+                // ),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+  Future<void> _onOpen(LinkableElement link) async {
+    if (await canLaunch(link.url)) {
+      await launch(link.url);
+    } else {
+      throw 'Could not launch $link';
+    }
   }
 }

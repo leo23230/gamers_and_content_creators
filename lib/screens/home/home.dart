@@ -43,7 +43,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home> {
     return StreamProvider.value(
       value: DatabaseService(uid: user.uid).userData,
       child:  Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xff0a0010),
         // appBar: AppBar(
         //   title: Text(
         //       tabs[_currentIndex],
@@ -106,7 +106,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home> {
             onTap: (index) {
               setState((){
                 _currentIndex = index;
-                _controller.animateToPage(_currentIndex, duration: Duration(milliseconds: 200), curve: Curves.linear);
+                _controller.animateToPage(_currentIndex, duration: Duration(milliseconds: 400), curve: Curves.easeOut);
               });
             },
             items: [

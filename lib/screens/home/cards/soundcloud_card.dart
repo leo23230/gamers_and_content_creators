@@ -25,7 +25,7 @@ class _SoundcloudCardState extends State<SoundcloudCard> {
       height: cardHeight,
       width: cardWidth,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.white, width: 4),
+        //border: Border.all(color: Colors.white, width: 2),
         borderRadius: BorderRadius.circular(cardRoundness),
         color: Colors.deepOrange[800],
       ),

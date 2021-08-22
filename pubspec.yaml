@@ -53,6 +53,8 @@ dependencies:
   assets_audio_player: ^2.0.10
   audioplayers: ^0.16.2
   flutter_linkify: ^4.0.0
+  #flutter_instagram_image_picker: ^1.1.0+3
+  instagram_media: ^0.0.11
 
 
 

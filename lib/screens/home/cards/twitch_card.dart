@@ -16,7 +16,7 @@ class _TwitchCardState extends State<TwitchCard> {
       height: cardHeight,
       width: cardWidth,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.white, width: 4),
+        //border: Border.all(color: Colors.white, width: 2),
         borderRadius: BorderRadius.circular(cardRoundness),
         color: Color.fromRGBO(50, 0, 80, 1),
       ),

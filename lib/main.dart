@@ -44,6 +44,9 @@ class _MyAppState extends State<MyApp> {
   void initState(){
     super.initState();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.black
+    ));
   }
 
   Widget build(BuildContext context) {

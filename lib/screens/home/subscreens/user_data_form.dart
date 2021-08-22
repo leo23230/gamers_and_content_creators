@@ -537,7 +537,7 @@ class _UserDataFormState extends State<UserDataForm> {
                           FlatButton(
                             onPressed:(() async{
                               _selectedImage = null; //reset _selected image
-                              await getImage(ImageSource.camera, 4, 3); //this sets _selectedImage
+                              await getImage(ImageSource.camera, 2, 0.5); //this sets _selectedImage
                               setState(() {
                                 if(_selectedImage != null)_backgroundImage = _selectedImage;
                                 Navigator.pop(context); //dismiss alert dialog
@@ -551,7 +551,7 @@ class _UserDataFormState extends State<UserDataForm> {
                           FlatButton(
                             onPressed:(() async{
                               _selectedImage = null; //reset _selected image
-                              await getImage(ImageSource.gallery, 4, 3); //this sets _selectedImage
+                              await getImage(ImageSource.gallery, 2, 0.5); //this sets _selectedImage
                               setState(() {
                                 if(_selectedImage != null)_backgroundImage = _selectedImage;
                                 Navigator.pop(context); //dismiss alert dialog

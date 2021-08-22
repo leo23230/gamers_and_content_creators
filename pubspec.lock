@@ -261,6 +261,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_webview_plugin:
+    dependency: transitive
+    description:
+      name: flutter_webview_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.11"
   geoflutterfire:
     dependency: "direct main"
     description:
@@ -352,6 +359,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  instagram_media:
+    dependency: "direct main"
+    description:
+      name: instagram_media
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.11"
   intl:
     dependency: "direct main"
     description:

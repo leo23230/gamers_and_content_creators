@@ -26,7 +26,7 @@ class DatabaseService {
   //Used both to initialize the user data doc and update the existing doc with new data
   Future updateUserData({String userId, String name, String age, List<dynamic> location, dynamic geoHash,
     int month, int day, int year, String profileImagePath, String backgroundImagePath, int radius, int ageMin, int ageMax,
-    List <dynamic> cards, String ytChannelId, String bioTitle, String bioBody,
+    List <dynamic> cards, String ytChannelId, String bioTitle, String bioBody, List<dynamic> instagramPics,
     List<dynamic> liked, List<dynamic> passed, List<dynamic> matches,}) async {
     return await profilesCollection.doc(uid).set({
       //If the optional named parameter = null we don't overwrite the existing value
@@ -44,10 +44,13 @@ class DatabaseService {
       if(radius != null) 'radius' : radius,
       if(ageMin != null) 'ageMin' : ageMin,
       if(ageMax != null) 'ageMax' : ageMax,
+
       if(cards != null) 'cards': cards,
       if(ytChannelId != null) 'ytChannelId': ytChannelId,
       if(bioTitle != null)'bioTitle' : bioTitle,
       if(bioBody != null) 'bioBody' : bioBody,
+      if(instagramPics != null) 'instagramPics' : instagramPics,
+
       if(liked != null) 'liked' : liked,
       if(passed != null) 'passed' : passed,
       if(matches != null) 'matches' : matches,
@@ -84,6 +87,7 @@ class DatabaseService {
         ytChannelId: doc.data()['ytChannelId'] ?? '',
         bioTitle: doc.data()['bioTitle'] ?? '',
         bioBody: doc.data()['bioBody'] ?? '',
+        instagramPics: doc.data()['instagramPics'] ?? [''],
         liked: doc.data()['liked'] ?? [''],
         passed: doc.data()['passed'] ?? [''],
         matches: doc.data()['matches'] ?? [''],
@@ -113,6 +117,7 @@ class DatabaseService {
       ytChannelId: snapshot.data()['ytChannelId'],
       bioTitle: snapshot.data()['bioTitle'],
       bioBody: snapshot.data()['bioBody'],
+      instagramPics: snapshot.data()['instagramPics'],
       liked: snapshot.data()['liked'],
       passed: snapshot.data()['passed'],
       matches: snapshot.data()['matches'],

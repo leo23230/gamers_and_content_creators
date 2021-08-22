@@ -238,6 +238,35 @@ class SoundcloudPreviewCard extends StatelessWidget {
   }
 }
 
+class InstagramPreviewCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 160,
+      width: 120,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white, width: 2),
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.pink[500],
+        // gradient: LinearGradient(
+        //   begin: Alignment.topRight,
+        //   end: Alignment.bottomLeft,
+        //   colors: [
+        //     Colors.grey[800],
+        //     Colors.grey[900],
+        //   ],
+        // ),
+      ),
+      child: Center(
+        child: Text(
+          'Instagram',
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.white),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+}
 
 // Future removeCard(String uid, {String name, String age, String location, int month, int day, int year, String pIP, String bIP, List<dynamic> cards, String ytChannelId}) async {
 //   UserModel user = Provider.of<UserModel>(context);

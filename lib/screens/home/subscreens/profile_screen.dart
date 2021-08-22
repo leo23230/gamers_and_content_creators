@@ -4,6 +4,7 @@ import 'package:gamers_and_content_creators/shared/card_enum.dart';
 import 'package:gamers_and_content_creators/shared/constants.dart';
 import 'package:gamers_and_content_creators/shared/profile_image.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gamers_and_content_creators/screens/home/cards/stats_card.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Profile profile;
@@ -90,6 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       controller: _controller,
                       scrollDirection: Axis.horizontal,
                       children:[
+                        StatsCard(),
                         for(int i = 0; i < widget.profile.cards.length; i++) //This creates a physical card for ever item in the cards list
                           enumToWidget( //this is where we pass in all of the data for all of the cards
                             widget.profile.cards[i],

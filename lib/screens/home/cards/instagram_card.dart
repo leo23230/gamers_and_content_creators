@@ -116,10 +116,10 @@ class PictureGridWidget extends StatelessWidget {
   PictureGridWidget({this.pics});
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-      child: Scrollbar(
-        radius: Radius.circular(10),
+    return Scrollbar(
+      radius: Radius.circular(10),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
         child: GridView.count(
           //controller: _controller,
           primary:false,

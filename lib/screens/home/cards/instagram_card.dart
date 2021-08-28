@@ -23,7 +23,7 @@ class _InstagramCardState extends State<InstagramCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
       height: cardHeight,
       width: cardWidth,
       decoration: BoxDecoration(
@@ -42,11 +42,11 @@ class _InstagramCardState extends State<InstagramCard> {
       child: Column(
         children: [
           SizedBox(
-            width: 60,
-            height: 60,
+            width: 45,
+            height: 45,
             child: Image.asset('assets/ScaledInstagramLogo.png', scale: 0.1),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 10),
           Expanded(
             child: Container(
               constraints: BoxConstraints.expand(),
@@ -58,7 +58,7 @@ class _InstagramCardState extends State<InstagramCard> {
                 ),
               ),
               child: Padding(
-                padding: EdgeInsets.fromLTRB(5,10,5,10),
+                padding: EdgeInsets.fromLTRB(5,0,5,0),
                 child: PageView(
                   controller: _controller,
                   children:[
@@ -119,7 +119,7 @@ class PictureGridWidget extends StatelessWidget {
     return Scrollbar(
       radius: Radius.circular(10),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
         child: GridView.count(
           //controller: _controller,
           primary:false,
@@ -157,7 +157,7 @@ class PictureScrollWidget extends StatelessWidget {
     return Scrollbar(
       radius: Radius.circular(10),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: ListView(
           children: [
             for(final pic in this.pics)

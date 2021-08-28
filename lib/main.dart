@@ -1,4 +1,5 @@
 import 'package:gamers_and_content_creators/screens/home/subscreens/card_manager.dart';
+import 'package:gamers_and_content_creators/screens/home/subscreens/followers.dart';
 import 'package:gamers_and_content_creators/screens/home/subscreens/map.dart';
 import 'package:gamers_and_content_creators/screens/home/subscreens/user_data_form.dart';
 import 'package:gamers_and_content_creators/screens/wrapper.dart';
@@ -69,6 +70,7 @@ class _MyAppState extends State<MyApp> {
           '/card-manager' : (context) => CardManager(),
           '/user-info' : (context) => UserDataForm(),
           '/map': (context) => MapWidget(),
+          '/followers': (context) => Followers(),
         },
         initialRoute: '/',
         theme: ThemeData(

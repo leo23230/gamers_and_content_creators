@@ -43,48 +43,51 @@ class _StatsCardState extends State<StatsCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Column(
-                        children: [
-                          Text(
-                            '40',
-                            style: GoogleFonts.lato(
-                              fontSize: 32,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              'Followers',
+                      FlatButton(
+                        onPressed: (){Navigator.pushNamed(context, '/followers');},
+                        child: Column(
+                          children: [
+                            Text(
+                              '40',
                               style: GoogleFonts.lato(
-                                fontSize: 24,
+                                fontSize: 32,
                                 color: Colors.white,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            '62',
-                            style: GoogleFonts.lato(
-                              fontSize: 32,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              'Following',
-                              style: GoogleFonts.lato(
-                                fontSize: 24,
-                                color: Colors.white,
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                'Followers',
+                                style: GoogleFonts.lato(
+                                  fontSize: 24,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                      // Column(
+                      //   children: [
+                      //     Text(
+                      //       '62',
+                      //       style: GoogleFonts.lato(
+                      //         fontSize: 32,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //     Padding(
+                      //       padding: const EdgeInsets.all(4.0),
+                      //       child: Text(
+                      //         'Following',
+                      //         style: GoogleFonts.lato(
+                      //           fontSize: 24,
+                      //           color: Colors.white,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                   Divider(
@@ -159,7 +162,7 @@ class _StatsCardState extends State<StatsCard> {
                           Icon(
                             Icons.star,
                             size: 32,
-                            color: Colors.white,
+                            color: Colors.orange[500],
                           ),
                         Text(
                           '(4.8)',

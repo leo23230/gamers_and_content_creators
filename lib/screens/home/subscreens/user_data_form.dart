@@ -124,44 +124,44 @@ class _UserDataFormState extends State<UserDataForm> {
     if(_profileImage == null){
       if(existingProfileImagePath != ''){
         return Container(
-          width: 180,
-          height: 180,
+          width: 120,
+          height: 120,
           decoration: BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(existingProfileImagePath),
               fit: BoxFit.cover,
             ),
-            border: Border.all(width: 4, color: Colors.white),
+            border: Border.all(width: 2, color: Colors.white),
             borderRadius: BorderRadius.all(Radius.circular(100)),
           ),
         );
       }
       else{
         return Container(
-          width: 180,
-          height: 180,
+          width: 120,
+          height: 120,
           decoration: BoxDecoration(
-            border: Border.all(width: 4, color: Colors.white),
+            border: Border.all(width: 2, color: Colors.white),
             borderRadius: BorderRadius.all(Radius.circular(90)),
           ),
           child: Icon(
             Icons.person,
             color: Colors.white,
-            size: 120,
+            size: 60,
           ),
         );
       }
     }
     else{
       return Container(
-        width: 180,
-        height: 180,
+        width: 120,
+        height: 120,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: FileImage(_profileImage),
             fit: BoxFit.cover,
           ),
-          border: Border.all(width: 4, color: Colors.white),
+          border: Border.all(width: 2, color: Colors.white),
           borderRadius: BorderRadius.all(Radius.circular(90)),
         ),
       );
@@ -261,14 +261,14 @@ class _UserDataFormState extends State<UserDataForm> {
 
                             //Black transparent circle with camera button
                             Container(
-                              width: 170,
-                              height: 170,
+                              width: 114,
+                              height: 114,
                               decoration: BoxDecoration(
                                 color: Color.fromRGBO(0, 0, 0, 0.7),
                                 borderRadius: BorderRadius.all(Radius.circular(90)),
                               ),
                               child: IconButton( //camera button
-                                iconSize: 60,
+                                iconSize: 40,
                                 icon: Icon(Icons.camera_alt, color: Colors.white),
                                 enableFeedback: true,
                                 onPressed:(){
@@ -317,18 +317,17 @@ class _UserDataFormState extends State<UserDataForm> {
                           ],
 
                         ),
-                        SizedBox(height: 60),
                         Form(
                           key: _formKey,
                           child: Column(
                             children: <Widget>[
-                              SizedBox(height: 20.0),
+                              SizedBox(height: 10.0),
                               Text(
-                                'Name',
+                                'Display Name',
                                 textAlign: TextAlign.left,
                                 style: GoogleFonts.lato(fontSize: 18, color: Colors.white),
                               ),
-                              SizedBox(height: 8.0),
+                              SizedBox(height: 4.0),
                               SizedBox( //Name Form Field
                                 width: 250,
                                 child: TextFormField(
@@ -342,13 +341,29 @@ class _UserDataFormState extends State<UserDataForm> {
                                   },
                                 ),
                               ),
-                              SizedBox(height: 10.0),
+                              SizedBox(height: 8.0),
+                              Text(
+                                'Title',
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.lato(fontSize: 18, color: Colors.white),
+                              ),
+                              SizedBox(height: 4.0),
+                              SizedBox( //Title Form Field
+                                width: 250,
+                                child: TextFormField(
+                                  //initialValue: userData.name,
+                                  decoration: textInputDecoration,
+                                  validator: (val) => val.isEmpty ? 'Enter a title' : null,
+                                ),
+                              ),
+                              SizedBox(height: 8.0),
                               Text(
                                 'Location',
                                 textAlign: TextAlign.left,
                                 style: GoogleFonts.lato(fontSize: 18, color: Colors.white),
                               ),
-                              SizedBox( //Name Form Field
+                              SizedBox(height: 4.0),
+                              SizedBox( //Location Form Field
                                 width: 250,
                                 //listens for changes to 'place' variable
                                 //updates this widget to display the chosen place

@@ -78,6 +78,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 color: Colors.orange,
                               ),
                             ),
+                            // Text(
+                            //     widget.profile.location[0],
+                            //   style: GoogleFonts.lato(
+                            //     fontSize: 20,
+                            //     color: Colors.orange,
+                            //   ),
+                            // ),
                           ],
                         )
                       ],
@@ -129,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SafeArea(
             child: Container(
               width: 40,
-              margin: EdgeInsets.all(8),
+              margin: EdgeInsets.fromLTRB(8, 4, 0, 4),
               decoration: ShapeDecoration(
                 color: Color.fromRGBO(0, 0, 0, 0.3),
                 shape: CircleBorder(),
@@ -138,6 +145,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.white,
                 //onPressed:(){},
               ),
+            ),
+          ),
+          SafeArea(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      width: 40,
+                      margin: EdgeInsets.fromLTRB(8, 4, 8, 0),
+                      decoration: ShapeDecoration(
+                        color: Color.fromRGBO(0, 0, 0, 0.3),
+                        shape: CircleBorder(),
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                        onPressed: (){},
+                      ),
+                    ),
+                    Container(
+                      width: 40,
+                      margin: EdgeInsets.fromLTRB(8, 0, 8, 4),
+                      decoration: ShapeDecoration(
+                        color: Color.fromRGBO(0, 0, 0, 0.3),
+                        shape: CircleBorder(),
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.group,
+                          color: Colors.white,
+                        ),
+                        onPressed: (){},
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ],

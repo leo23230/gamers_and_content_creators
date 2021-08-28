@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_instagram_image_picker/screens.dart';
 import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:gamers_and_content_creators/services/google_auth.dart';
+import 'package:gamers_and_content_creators/services/twitch_api_service.dart';
 import 'package:gamers_and_content_creators/shared/card_enum.dart';
 import 'package:gamers_and_content_creators/shared/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -318,14 +319,14 @@ class _CardPickerState extends State<CardPicker> {
             builder: (context) => InstagramMedia(
               appID: '1138567009886689',
               appSecret: '45626dbe26074cbd743579ae5af9fe65',
-              mediaTypes: 0,
+              mediaTypes: 2,
             )
         )
       );
       setState(() {
         _tempInstagramPics = result[0];
       });
-      //print(result);
+      print(result);
     }
 
     return Flexible(
@@ -367,6 +368,7 @@ class _CardPickerState extends State<CardPicker> {
                                 RealCardManager.of(context).youtubeChannelId = await signInWithGoogle();
                                 break;
                               case 'Twitch Card':
+                                await TwitchApiService.instance.getAccessToken();
                                 break;
                               case 'Bio Card':
                                 await bioForm();

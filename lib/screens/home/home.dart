@@ -5,6 +5,7 @@ import 'package:gamers_and_content_creators/screens/home/profile.dart';
 import 'package:gamers_and_content_creators/screens/home/swipe.dart';
 import 'package:gamers_and_content_creators/screens/home/matches.dart';
 import 'package:gamers_and_content_creators/services/database.dart';
+import 'package:gamers_and_content_creators/shared/custom_page_view_scroll_physics.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -43,7 +44,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home> {
     return StreamProvider.value(
       value: DatabaseService(uid: user.uid).userData,
       child:  Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xff0a0010),
         // appBar: AppBar(
         //   title: Text(
         //       tabs[_currentIndex],
@@ -72,6 +73,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home> {
         // ),
         body: SafeArea(
           child: PageView(
+            physics: CustomPageViewScrollPhysics(),
             controller: _controller,
             children:[
               Profile(),
@@ -106,7 +108,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home> {
             onTap: (index) {
               setState((){
                 _currentIndex = index;
-                _controller.animateToPage(_currentIndex, duration: Duration(milliseconds: 200), curve: Curves.linear);
+                _controller.animateToPage(_currentIndex, duration: Duration(milliseconds: 400), curve: Curves.easeOut);
               });
             },
             items: [

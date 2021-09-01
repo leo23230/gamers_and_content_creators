@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+//import 'package:flutter_instagram_image_picker/flutter_instagram_image_picker.dart';
+//import 'package:flutter_instagram_image_picker/screens.dart';
 import 'package:gamers_and_content_creators/models/user.dart';
 import 'package:gamers_and_content_creators/services/google_auth.dart';
+import 'package:gamers_and_content_creators/services/twitch_api_service.dart';
 import 'package:gamers_and_content_creators/shared/card_enum.dart';
 import 'package:gamers_and_content_creators/shared/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:instagram_media/instagram_media.dart';
 import'package:provider/provider.dart';
 import 'package:gamers_and_content_creators/services/database.dart';
 
@@ -43,6 +47,7 @@ class _RealCardManagerState extends State<RealCardManager> {
   String youtubeChannelId;
   String bioTitle;
   String bioBody;
+  List<dynamic> instagramPics;
 
   @override
   Widget build(BuildContext context) {
@@ -190,22 +195,15 @@ class _CardDeckState extends State<CardDeck> {
                 color: Colors.white,
               ),
             ),
+            ////UPDATE BUTTON
             onPressed: () async{
               await DatabaseService(uid: user.uid).updateUserData(
-                //We don't need to update these values here
-                // userData.name,
-                // userData.age,
-                // userData.location,
-                // userData.month,
-                // userData.day,
-                // userData.year,
-                // userData.profileImagePath,
-                // userData.backgroundImagePath,
-                //
+                //We don't need to update the other values here
                 cards: myItems,
                 ytChannelId: RealCardManager.of(context).youtubeChannelId ?? userData.ytChannelId,
                 bioTitle: RealCardManager.of(context).bioTitle ?? userData.bioTitle,
                 bioBody: RealCardManager.of(context).bioBody ?? userData.bioBody,
+                instagramPics: RealCardManager.of(context).instagramPics ?? userData.instagramPics,
               );
               Navigator.pop(context);
             },
@@ -230,6 +228,7 @@ class _CardPickerState extends State<CardPicker> {
   //These variables hold the user Input until the update button is pushed
   String _tempBioTitle;
   String _tempBioBody;
+  List<dynamic> _tempInstagramPics;
 
   @override
 
@@ -313,6 +312,23 @@ class _CardPickerState extends State<CardPicker> {
       await future.then((void value) => "Done Updating"); //Essential for keeping the variables from updating before the modal sheet closes
     }
 
+    Future instagramLogin (context) async {
+      final result = await Navigator.push(
+          context,
+        MaterialPageRoute(
+            builder: (context) => InstagramMedia(
+              appID: '1138567009886689',
+              appSecret: '45626dbe26074cbd743579ae5af9fe65',
+              mediaTypes: 2,
+            )
+        )
+      );
+      setState(() {
+        _tempInstagramPics = result[0];
+      });
+      print(result);
+    }
+
     return Flexible(
       child: Container(
         margin: EdgeInsets.fromLTRB(0,8,0,0),
@@ -352,11 +368,17 @@ class _CardPickerState extends State<CardPicker> {
                                 RealCardManager.of(context).youtubeChannelId = await signInWithGoogle();
                                 break;
                               case 'Twitch Card':
+                                await TwitchApiService.instance.getAccessToken();
                                 break;
                               case 'Bio Card':
                                 await bioForm();
+                                //this is done to prevent null varaible to overwrite existing data
                                 if(_tempBioTitle != null) RealCardManager.of(context).bioTitle = _tempBioTitle;
                                 if(_tempBioBody != null) RealCardManager.of(context).bioBody = _tempBioBody;
+                                break;
+                              case 'Instagram Card':
+                                await instagramLogin(context);
+                                if(_tempInstagramPics != null) RealCardManager.of(context).instagramPics = _tempInstagramPics;
                                 break;
                             }
                             setState((){

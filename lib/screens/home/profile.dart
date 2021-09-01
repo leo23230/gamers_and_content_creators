@@ -116,18 +116,18 @@ class _ProfileState extends State<Profile> {
             color: Colors.grey[850],
             child: ListTile(
               leading: Icon(
-                Icons.monetization_on,
+                Icons.message,
                 size:50.0,
               ),
               title: Text(
-                'Deals!',
+                'Contact Us',
                 style: GoogleFonts.lato(
                   fontSize: 20,
                   color: Colors.grey[200],
                 ),
               ),
               subtitle: Text(
-                'Get great deals for using our app!',
+                'Having Trouble? Tell us more here',
                 style: GoogleFonts.lato(
                   fontSize: 16,
                   color: Colors.grey[500],

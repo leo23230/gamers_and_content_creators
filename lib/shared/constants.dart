@@ -13,3 +13,6 @@ const textInputDecoration = InputDecoration(
 );
 
 const double cardRoundness = 10.0;
+const Color backgroundColor = Color(0xff0a0010);
+const double cardHeight = 480;
+const double cardWidth = 360;

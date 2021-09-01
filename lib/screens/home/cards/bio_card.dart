@@ -34,7 +34,7 @@ class _BioCardState extends State<BioCard> {
             Colors.grey[900],
           ],
         ),
-        border: Border.all(color: Colors.white, width: 4),
+        //border: Border.all(color: Colors.white, width: 0),
         borderRadius: BorderRadius.circular(cardRoundness),
       ),
       child: Column(
@@ -56,7 +56,7 @@ class _BioCardState extends State<BioCard> {
               //margin: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Color.fromRGBO(0, 0, 0, 0.4),
-                border: Border.all(color: Colors.white, width: 2),
+                //border: Border.all(color: Colors.white, width: 2),
                 borderRadius: BorderRadius.circular(cardRoundness),
               ),
               child: Padding(

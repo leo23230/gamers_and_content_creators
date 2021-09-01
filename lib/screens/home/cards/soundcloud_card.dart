@@ -1,5 +1,5 @@
-import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:audioplayers/audioplayers.dart';
+//import 'package:assets_audio_player/assets_audio_player.dart';
+//import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:gamers_and_content_creators/shared/constants.dart';
 
@@ -12,7 +12,7 @@ class _SoundcloudCardState extends State<SoundcloudCard> {
   final double cardHeight = 480;
   final double cardWidth = 360;
 
-  AudioPlayer audioPlayer = AudioPlayer();
+  //AudioPlayer audioPlayer = AudioPlayer();
   Duration duration = new Duration();
   Duration position = new Duration();
 
@@ -25,7 +25,7 @@ class _SoundcloudCardState extends State<SoundcloudCard> {
       height: cardHeight,
       width: cardWidth,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.white, width: 4),
+        //border: Border.all(color: Colors.white, width: 2),
         borderRadius: BorderRadius.circular(cardRoundness),
         color: Colors.deepOrange[800],
       ),
@@ -39,10 +39,10 @@ class _SoundcloudCardState extends State<SoundcloudCard> {
               ],
             ),
           ),
-          audioSlider(),
+          //audioSlider(),
           InkWell(
             onTap: () async{
-              await getAudio();
+              //await getAudio();
               print("done");
             },
             child: Icon(
@@ -58,49 +58,49 @@ class _SoundcloudCardState extends State<SoundcloudCard> {
     );
   }
 
-  Widget audioSlider(){
-    return Slider.adaptive(
-      min: 0.0,
-      value: position.inSeconds.toDouble(),
-      max: duration.inSeconds.toDouble(),
-      onChanged: (double value) {
-        setState((){
-          audioPlayer.seek(new Duration (seconds: value.toInt()));
-        });
-      }
-    );
-  }
-  Future getAudio() async{
-    var url = "https://soundcloud.com/melenium/lean-on-vs-itapii";
-
-    //
-    if(_playing){
-      //pause song
-      var res = await audioPlayer.pause();
-      if(res == 1) {
-        setState(() {
-          _playing = false;
-          audioPlayer.setVolume(0.2);
-        });
-      }
-    }
-    else {
-      //play song
-      var res = await audioPlayer.play(url, isLocal: false);
-      if(res == 1){
-        setState(() {
-          _playing = true;
-        });
-      }
-    }
-
-    audioPlayer.onDurationChanged.listen((Duration dd){
-      setState(() {
-        duration = dd;
-      });
-    });
-    audioPlayer.onAudioPositionChanged.listen((Duration dd) {
-      position = dd;
-    });
-  }
+  // Widget audioSlider(){
+  //   return Slider.adaptive(
+  //     min: 0.0,
+  //     value: position.inSeconds.toDouble(),
+  //     max: duration.inSeconds.toDouble(),
+  //     onChanged: (double value) {
+  //       setState((){
+  //         //audioPlayer.seek(new Duration (seconds: value.toInt()));
+  //       });
+  //     }
+  //   );
+  // }
+  // Future getAudio() async{
+  //   var url = "https://soundcloud.com/melenium/lean-on-vs-itapii";
+  //
+  //   //
+  //   if(_playing){
+  //     //pause song
+  //     //var res = await audioPlayer.pause();
+  //     if(res == 1) {
+  //       setState(() {
+  //         _playing = false;
+  //         //audioPlayer.setVolume(0.2);
+  //       });
+  //     }
+  //   }
+  //   else {
+  //     //play song
+  //     //var res = await audioPlayer.play(url, isLocal: false);
+  //     if(res == 1){
+  //       setState(() {
+  //         _playing = true;
+  //       });
+  //     }
+  //   }
+  //
+  //   //audioPlayer.onDurationChanged.listen((Duration dd){
+  //     setState(() {
+  //       duration = dd;
+  //     });
+  //   });
+  //   //audioPlayer.onAudioPositionChanged.listen((Duration dd) {
+  //     position = dd;
+  //   });
+  // }
 }

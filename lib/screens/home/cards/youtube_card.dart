@@ -51,7 +51,7 @@ class _YoutubeCardState extends State<YoutubeCard> {
         height: 100.0,
         decoration: BoxDecoration(
           color: Color.fromRGBO(50, 50, 50, 0.8),
-          border: Border.all(color: Colors.white, width: 2),
+          //border: Border.all(color: Colors.white, width: 2),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         child: Row(
@@ -104,7 +104,7 @@ class _YoutubeCardState extends State<YoutubeCard> {
         height: 130.0,
         decoration: BoxDecoration(
           color: Color.fromRGBO(50, 50, 50, 0.8),
-          border: Border.all(color: Colors.white, width: 2),
+          //border: Border.all(color: Colors.white, width: 2),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         child: Row(
@@ -146,9 +146,17 @@ class _YoutubeCardState extends State<YoutubeCard> {
       height: cardHeight,
       width: cardWidth,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.white, width: 4),
+        //border: Border.all(color: Colors.white, width: 2),
         borderRadius: BorderRadius.circular(cardRoundness),
-        color: Color.fromRGBO(70, 0, 0, 1),
+        //color: Color.fromRGBO(70, 0, 0, 1),
+        gradient: LinearGradient(
+          colors: [
+            Color.fromRGBO(70, 0, 0, 1),
+            Color.fromRGBO(120, 0, 0, 1),
+          ],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        ),
       ),
       child: Column( // YOUTUBE CARD
         children: [

@@ -15,7 +15,7 @@ class PictureUploader {
   PictureUploader({this.uid,this.file, this.fileName});
 
   UploadTask _uploadTask;
-  final FirebaseStorage _storage = FirebaseStorage(storageBucket: 'gs://gamers-and-content-creators.appspot.com');
+  final FirebaseStorage _storage = FirebaseStorage.instanceFor(bucket: 'gs://gamers-and-content-creators.appspot.com');
 
   Future<String> startUpload() async {
 
@@ -53,7 +53,7 @@ class Uploader extends StatefulWidget {
 }
 
 class _UploaderState extends State<Uploader> {
-  final FirebaseStorage _storage = FirebaseStorage(storageBucket: 'gs://gamers-and-content-creators.appspot.com');
+  final FirebaseStorage _storage = FirebaseStorage.instanceFor(bucket: 'gs://gamers-and-content-creators.appspot.com');
 
   UploadTask _uploadTask;
 
